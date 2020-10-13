@@ -1,5 +1,8 @@
 import Index from "views/Index.js";
 import Users from "views/examples/Users.js";
+import Companies from "views/examples/Companies";
+import Packages from "views/examples/Packages";
+import Blocks from "views/examples/Blocks";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
@@ -20,6 +23,27 @@ var routes = [
     name: "Users",
     icon: "ni ni-single-02 text-yellow",
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/company",
+    name: "Companies",
+    icon: "ni ni-briefcase-24 text-blue",
+    component: Companies,
+    layout: "/admin"
+  },
+  {
+    path: "/company",
+    name: "Packages",
+    icon: "ni ni-bag-17 text-pink",
+    component: Packages,
+    layout: "/admin"
+  },
+  {
+    path: "/company",
+    name: "Blocks",
+    icon: " ni ni-app text-red",
+    component: Blocks,
     layout: "/admin"
   },
   {

@@ -38,7 +38,6 @@ export default class WebServicesManager extends React.Component {
         "Content-Type": "application/json"
       }
     if(params.token !== undefined){headeris["Authorization"]="Bearer "+params.token}
-    debugger;
     fetch(baseURL, {
       method: "Get",
       headers: headeris,
@@ -178,9 +177,7 @@ export default class WebServicesManager extends React.Component {
       })
       .catch(error => {});
   }
-  // getApiCallInstructor(params, callback) {
-  //   return this.callGetMethod(this.baseUrl + params.endPoint, params, callback);
-  // }
+  
 
   postApiNearbyInstructorsCall(params, callback) {
     return this.callPostNearbyInstructorMethod(
@@ -317,18 +314,19 @@ getApiwithParamReturnMsg(params, callback) {
 
   //Get with parameters method with ID
   callPutMethod(baseURL, params, callback) {
-    var params2 = JSON.parse(params.dataToUpdate);
+    // var params2 = JSON.parse(params.dataToUpdate);
+    debugger;
     let headeris = {
         "Content-Type": "application/json"
       }
     if(params.token !== undefined){headeris["Authorization"]="Bearer "+params.token}
-    baseURL = baseURL + "?id=" + params2.id + "&status=" + params2.status;
+    baseURL = baseURL+"/"+params.userID;
 
     // baseURL = baseURL;
     fetch(baseURL, {
-      method: "Get",
+      method: "PUT",
       headers: headeris,
-      // body: params.dataToFetch
+      body: params.dataToUpdate
     })
       .then(response => response.json())
       .then(responseJson => {
