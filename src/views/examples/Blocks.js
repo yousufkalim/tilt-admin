@@ -27,72 +27,103 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-    { title: 'First Name' },
-    { title: 'Last Name'},
-    { title: 'Status'},
+    { title: 'Name' },
+    { title: 'Resturants'},
+    { title: 'Companies'},
+    { title: 'Order Time'},
+    { title: 'Pick up Time'},
+    { title: 'Delivery Time'},
+    { title: 'Delivery Cost'},
+    { title: 'Delivery Person'},
     {title:'Actions'},
   
   ];
 
 
-class Users extends React.Component {
+class Packages extends React.Component {
     WebServicesManager = new WebServicesManager();
     constructor(props){
         super(props);
         this.state = {
-            userList : [],
+            blockList : [],
             showAdd : false,
-            updateUser : false,
-            deleteUser : false,
+            updateBlock : false,
+            deleteBlock : false,
             didUpdate:false,
-            firstName:'',
-            lastName:'',
-            email:'',
+            name:'',
+            timeForOrder:'',
+            pickUpTime:'',
+            deliveryTime:'',
+            deliveryCost:'',
             currId:'',
         }
     }
-
-    // componentDidUpdate() {
-    //   if(this.state.didUpdate !== newDidUpdate){
-    //     this.handleLoadData();
-    //   }
-    // }
-
     handleClose = ()=> {
       this.setState({showAdd : false})
     }
     handleUpdateClose = ()=> {
-      this.setState({updateUser : false})
+      this.setState({updateBlock : false})
     }
     componentDidMount() {
         this.handleLoadData();
     }
 
+    handleAdd = () => {
+      debugger
+      const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = this.state;
+      const info = {
+          name,
+          timeForOrder,
+          pickUpTime,
+          deliveryTime,
+          deliveryCost
+      }
+      const dataToUpdate = JSON.stringify(info);
+      this.WebServicesManager.postApiCall(
+    {
+      endPoint: "admin/block",
+      dataToInsert: dataToUpdate,
+      token: localStorage.getItem('token'),
+    },
+    (statusCode, responseUpdate) => {
+      this.handleClose();
+      this.handleResetState();
+      this.handleLoadData();
+    }
+  );
+  }
+
+
   handleLoadData = () => {
-      this.setState({userList:[]});
+      this.setState({blockList:[]});
       var tokn= localStorage.getItem('token');
         this.WebServicesManager.getApiCall(
           {
-            endPoint: "user",
+            endPoint: "admin/block",
             token:tokn,
           },
           (statusCode, response) => {
-            var userDatais = [];
-            response.users.map(item=> {
-              if(item.status !== 'deleted'){
-                userDatais.push(
+            console.log("Response:"+JSON.stringify(response));
+            var blockDetails = [];
+            debugger;
+            response.blocks.map(item=> {
+                blockDetails.push(
                   [
-                    item.firstName,
-                    item.lastName,
-                    item.status,
+                    item.name,
+                    item.restaurants.length !== 0?item.restaurants.map(rest=>rest.firstName):"No resturant available",
+                    item.companies.length !==0 ?item.companies.map(comp=>comp.name):"No companies available",
+                    item.timeForOrder,
+                    item.pickUpTime,
+                    item.deliveryTime,
+                    item.deliveryCost,
+                    item.deliveryPerson!==undefined?item.deliveryPerson.firstName:'Not Assigned',
                     item._id
                   ]
                 );
-              }        
               }  
             );
-            this.setState({userList:userDatais},()=>{
-                console.log('response state',this.state.userList);
+            this.setState({blockList:blockDetails},()=>{
+                console.log('response state',this.state.blockList);
             });
           }
         );
@@ -104,7 +135,7 @@ class Users extends React.Component {
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
         {
-          endPoint: "user/delete",
+          endPoint: "admin/block/delete",
           dataToDelete: id,
           token: localStorage.getItem('token'),
         },
@@ -118,19 +149,17 @@ class Users extends React.Component {
     this.setState({[e.target.name]:e.target.value});
   }
 
-  handleUpdateUser = (id) => {
-    // debugger
+  handleupdateBlock = (id) => {
     var tokn= localStorage.getItem('token');
         this.WebServicesManager.getApiCall(
           {
-            endPoint: "user/get/"+id,
+            endPoint: "admin/block/get/"+id,
             // dataToFetch:id,
             token:tokn,
           },
           (statusCode, response) => {
-            // debugger;
-            const {email,firstName,lastName} = response.user;
-            this.setState({firstName,lastName,email,currId:id,updateUser: true,});
+            const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = response.block;
+            this.setState({name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,currId:id,updateBlock: true,});
           }
         );
   }
@@ -138,31 +167,34 @@ class Users extends React.Component {
 
   handleResetState = () => {
     this.setState({
-      firstName:'',
-      lastName:'',
-      email:'',
+      name:'',
+      timeForOrder:'',
+      pickUpTime:'',
+      deliveryTime:'',
+      deliveryCost:'',
       currId:'',
     })
   }
   handleUpdateSubmit = () => {
-    const {currId,firstName,lastName,email} = this.state;
+    const {currId,name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = this.state;
     const info = {
-      firstName,
-      lastName,
-      email,
+      name,
+      timeForOrder,
+      pickUpTime,
+      deliveryTime,
+      deliveryCost
     }
 
     const dataToUpdate = JSON.stringify(info);
     this.WebServicesManager.putApi(
       {
-        endPoint: "user/edit",
+        endPoint: "admin/block/edit",
         userID: currId,
         dataToUpdate: dataToUpdate,
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        debugger;
-        console.log("updates");
+        this.handleUpdateClose();
         this.handleResetState();
         this.handleLoadData();
       }
@@ -174,7 +206,7 @@ class Users extends React.Component {
       addAction : ()=>{
         this.setState({showAdd: true})
       },
-      updateAction : (id) =>this.handleUpdateUser(id),
+      updateAction : (id) =>this.handleupdateBlock(id),
       deleteAction:(id)=>this.handleDelete(id), 
   }
 
@@ -186,8 +218,8 @@ class Users extends React.Component {
           {/* Table */}
           return (
     <>
-        {this.state.userList.length >0?
-            <DataTableComponent actionCol={3} columns={columns} data={this.state.userList} actions={actionsList} />
+        {this.state.blockList.length >0?
+            <DataTableComponent actionCol={8} columns={columns} data={this.state.blockList} actions={actionsList} />
         :
             <>
             <hr/>
@@ -199,40 +231,76 @@ class Users extends React.Component {
         {/* // ADD User  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add User</Modal.Title>
+          <Modal.Title>Add New Block</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this User?</Modal.Body>
+        <Modal.Body>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" name="name" placeholder="Enter Block Name" value={this.state.name} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Order Time</Form.Label>
+            <Form.Control type="text" name="timeForOrder" placeholder="Enter Order Time" value={this.state.timeForOrder} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>PickUp Time</Form.Label>
+            <Form.Control type="text" name="pickUpTime" placeholder="Enter Pick up Time" value={this.state.pickUpTime} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Delivery Time</Form.Label>
+            <Form.Control type="text" name="deliveryTime" placeholder="Enter Delivery Time" value={this.state.deliveryTime} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Delivery Cost</Form.Label>
+            <Form.Control type="number" name="deliveryCost" placeholder="Enter Delivery Cost" value={this.state.deliveryCost} onChange={this.handleChange} />
+          </Form.Group>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
-            Close
+            Cancel
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={this.handleAdd}>
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* UPDATE User */}
-      <Modal show={this.state.updateUser} onHide={this.handleUpdateClose}>
+      <Modal show={this.state.updateBlock} onHide={this.handleUpdateClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User Info</Modal.Title>
+          <Modal.Title>Edit Block Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" name="firstName" placeholder="Enter First Name" value={this.state.firstName} onChange={this.handleChange} />
+        <Form.Group controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" name="name" placeholder="Enter Block Name" value={this.state.name} onChange={this.handleChange} />
           </Form.Group>
 
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" name="lastName" placeholder="Enter Last Name" value={this.state.lastName} onChange={this.handleChange} />
+            <Form.Label>Order Time</Form.Label>
+            <Form.Control type="text" name="timeForOrder" placeholder="Enter Order Time" value={this.state.timeForOrder} onChange={this.handleChange} />
           </Form.Group>
 
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" placeholder="Enter email" value={this.state.email} disabled onChange={this.handleChange} />
+            <Form.Label>PickUp Time</Form.Label>
+            <Form.Control type="text" name="pickUpTime" placeholder="Enter Pick up Time" value={this.state.pickUpTime} onChange={this.handleChange} />
           </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Delivery Time</Form.Label>
+            <Form.Control type="text" name="deliveryTime" placeholder="Enter Delivery Time" value={this.state.deliveryTime} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Delivery Cost</Form.Label>
+            <Form.Control type="number" name="deliveryCost" placeholder="Enter Delivery Cost" value={this.state.deliveryCost} onChange={this.handleChange} />
+          </Form.Group>
+
 
         </Modal.Body>
         <Modal.Footer>
@@ -240,7 +308,7 @@ class Users extends React.Component {
             Close
           </Button>
           <Button variant="primary" onClick={this.handleUpdateSubmit}>
-            Save Changes
+            Update
           </Button>
         </Modal.Footer>
       </Modal>
@@ -249,4 +317,4 @@ class Users extends React.Component {
   }
 }
 
-export default Users;
+export default Packages;

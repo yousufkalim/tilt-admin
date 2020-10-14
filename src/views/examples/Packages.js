@@ -27,72 +27,97 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-    { title: 'First Name' },
-    { title: 'Last Name'},
-    { title: 'Status'},
+    { title: 'Name' },
+    { title: 'Price'},
+    { title: 'Credits'},
+    { title: 'Off Price'},
+    { title: 'Expiration'},
     {title:'Actions'},
   
   ];
 
 
-class Users extends React.Component {
+class Packages extends React.Component {
     WebServicesManager = new WebServicesManager();
     constructor(props){
         super(props);
         this.state = {
-            userList : [],
+            packageList : [],
             showAdd : false,
-            updateUser : false,
-            deleteUser : false,
+            updatePackage : false,
+            deletePackage : false,
             didUpdate:false,
-            firstName:'',
-            lastName:'',
-            email:'',
+            name:'',
+            price:'',
+            offPrice:'',
+            expiration:'',
+            credits:'',
+
+
             currId:'',
         }
     }
-
-    // componentDidUpdate() {
-    //   if(this.state.didUpdate !== newDidUpdate){
-    //     this.handleLoadData();
-    //   }
-    // }
-
     handleClose = ()=> {
       this.setState({showAdd : false})
     }
     handleUpdateClose = ()=> {
-      this.setState({updateUser : false})
+      this.setState({updatePackage : false})
     }
     componentDidMount() {
         this.handleLoadData();
     }
 
+    handleAdd = () => {
+      debugger
+      const {name,price,offPrice,expiration,credits} = this.state;
+      const info = {
+          name,
+          price,
+          offPrice,
+          expiration,
+          credits
+      }
+      const dataToUpdate = JSON.stringify(info);
+      this.WebServicesManager.postApiCall(
+    {
+      endPoint: "admin/package",
+      dataToInsert: dataToUpdate,
+      token: localStorage.getItem('token'),
+    },
+    (statusCode, responseUpdate) => {
+      this.handleClose();
+      this.handleResetState();
+      this.handleLoadData();
+    }
+  );
+  }
+
+
   handleLoadData = () => {
-      this.setState({userList:[]});
+      this.setState({packageList:[]});
       var tokn= localStorage.getItem('token');
         this.WebServicesManager.getApiCall(
           {
-            endPoint: "user",
+            endPoint: "admin/package",
             token:tokn,
           },
           (statusCode, response) => {
-            var userDatais = [];
-            response.users.map(item=> {
-              if(item.status !== 'deleted'){
-                userDatais.push(
+            var packageDetails = [];
+            response.packages.map(item=> {
+                packageDetails.push(
                   [
-                    item.firstName,
-                    item.lastName,
-                    item.status,
+                    item.name,
+                    item.price,
+                    item.credits,
+                    item.offPrice,
+                    item.expiration,
                     item._id
                   ]
                 );
-              }        
               }  
             );
-            this.setState({userList:userDatais},()=>{
-                console.log('response state',this.state.userList);
+            this.setState({packageList:packageDetails},()=>{
+                console.log('response state',this.state.packageList);
             });
           }
         );
@@ -104,7 +129,7 @@ class Users extends React.Component {
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
         {
-          endPoint: "user/delete",
+          endPoint: "admin/package/delete",
           dataToDelete: id,
           token: localStorage.getItem('token'),
         },
@@ -118,19 +143,18 @@ class Users extends React.Component {
     this.setState({[e.target.name]:e.target.value});
   }
 
-  handleUpdateUser = (id) => {
-    // debugger
+  handleupdatePackage = (id) => {
     var tokn= localStorage.getItem('token');
         this.WebServicesManager.getApiCall(
           {
-            endPoint: "user/get/"+id,
+            endPoint: "admin/package/get/"+id,
             // dataToFetch:id,
             token:tokn,
           },
           (statusCode, response) => {
-            // debugger;
-            const {email,firstName,lastName} = response.user;
-            this.setState({firstName,lastName,email,currId:id,updateUser: true,});
+            debugger;
+            const {name,price,offPrice,expiration,credits} = response.package;
+            this.setState({name,price,offPrice,expiration,credits,currId:id,updatePackage: true,});
           }
         );
   }
@@ -138,31 +162,34 @@ class Users extends React.Component {
 
   handleResetState = () => {
     this.setState({
-      firstName:'',
-      lastName:'',
-      email:'',
+      name:'',
+      price:'',
+      offPrice:'',
+      expiration:'',
+      credits:'',
       currId:'',
     })
   }
   handleUpdateSubmit = () => {
-    const {currId,firstName,lastName,email} = this.state;
+    const {currId,name,price,offPrice,credits,expiration} = this.state;
     const info = {
-      firstName,
-      lastName,
-      email,
+      name,
+      price,
+      offPrice,
+      credits,
+      expiration
     }
 
     const dataToUpdate = JSON.stringify(info);
     this.WebServicesManager.putApi(
       {
-        endPoint: "user/edit",
+        endPoint: "admin/package/edit",
         userID: currId,
         dataToUpdate: dataToUpdate,
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        debugger;
-        console.log("updates");
+        this.handleUpdateClose();
         this.handleResetState();
         this.handleLoadData();
       }
@@ -174,7 +201,7 @@ class Users extends React.Component {
       addAction : ()=>{
         this.setState({showAdd: true})
       },
-      updateAction : (id) =>this.handleUpdateUser(id),
+      updateAction : (id) =>this.handleupdatePackage(id),
       deleteAction:(id)=>this.handleDelete(id), 
   }
 
@@ -186,8 +213,8 @@ class Users extends React.Component {
           {/* Table */}
           return (
     <>
-        {this.state.userList.length >0?
-            <DataTableComponent actionCol={3} columns={columns} data={this.state.userList} actions={actionsList} />
+        {this.state.packageList.length >0?
+            <DataTableComponent actionCol={5} columns={columns} data={this.state.packageList} actions={actionsList} />
         :
             <>
             <hr/>
@@ -199,40 +226,76 @@ class Users extends React.Component {
         {/* // ADD User  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add User</Modal.Title>
+          <Modal.Title>Add Package</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this User?</Modal.Body>
+        <Modal.Body>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" name="name" placeholder="Enter Package Name" value={this.state.name} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Price</Form.Label>
+            <Form.Control type="Number" name="price" placeholder="Enter Price" value={this.state.price} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Off Price</Form.Label>
+            <Form.Control type="number" name="offPrice" placeholder="Enter Off Price" value={this.state.offPrice} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Credits</Form.Label>
+            <Form.Control type="number" name="credits" placeholder="Enter Credits" value={this.state.credits} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Expiration</Form.Label>
+            <Form.Control type="number" name="expiration" placeholder="Enter Expiration" value={this.state.expiration} onChange={this.handleChange} />
+          </Form.Group>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
-            Close
+            Cancel
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={this.handleAdd}>
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* UPDATE User */}
-      <Modal show={this.state.updateUser} onHide={this.handleUpdateClose}>
+      <Modal show={this.state.updatePackage} onHide={this.handleUpdateClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User Info</Modal.Title>
+          <Modal.Title>Edit Package Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" name="firstName" placeholder="Enter First Name" value={this.state.firstName} onChange={this.handleChange} />
+        <Form.Group controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" name="name" placeholder="Enter Package Name" value={this.state.name} onChange={this.handleChange} />
           </Form.Group>
 
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" name="lastName" placeholder="Enter Last Name" value={this.state.lastName} onChange={this.handleChange} />
+            <Form.Label>Price</Form.Label>
+            <Form.Control type="Number" name="price" placeholder="Enter Price" value={this.state.price} onChange={this.handleChange} />
           </Form.Group>
 
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" placeholder="Enter email" value={this.state.email} disabled onChange={this.handleChange} />
+            <Form.Label>Off Price</Form.Label>
+            <Form.Control type="number" name="offPrice" placeholder="Enter Off Price" value={this.state.offPrice} onChange={this.handleChange} />
           </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Credits</Form.Label>
+            <Form.Control type="number" name="credits" placeholder="Enter Credits" value={this.state.credits} onChange={this.handleChange} />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Expiration</Form.Label>
+            <Form.Control type="number" name="expiration" placeholder="Enter Expiration" value={this.state.expiration} onChange={this.handleChange} />
+          </Form.Group>
+
 
         </Modal.Body>
         <Modal.Footer>
@@ -240,7 +303,7 @@ class Users extends React.Component {
             Close
           </Button>
           <Button variant="primary" onClick={this.handleUpdateSubmit}>
-            Save Changes
+            Update
           </Button>
         </Modal.Footer>
       </Modal>
@@ -249,4 +312,4 @@ class Users extends React.Component {
   }
 }
 
-export default Users;
+export default Packages;

@@ -35,7 +35,7 @@ const columns = [
   ];
 
 
-class Users extends React.Component {
+class Company extends React.Component {
     WebServicesManager = new WebServicesManager();
     constructor(props){
         super(props);
@@ -78,6 +78,7 @@ class Users extends React.Component {
       (statusCode, responseUpdate) => {
         debugger;
         console.log("updates");
+        this.handleClose();
         this.handleResetState();
         this.handleLoadData();
       }
@@ -175,8 +176,7 @@ class Users extends React.Component {
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        // debugger;
-        console.log("updates");
+        this.handleUpdateClose();
         this.handleResetState();
         this.handleLoadData();
       }
@@ -274,4 +274,4 @@ class Users extends React.Component {
   }
 }
 
-export default Users;
+export default Company;

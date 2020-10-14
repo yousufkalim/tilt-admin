@@ -33,14 +33,14 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/company",
+    path: "/package",
     name: "Packages",
     icon: "ni ni-bag-17 text-pink",
     component: Packages,
     layout: "/admin"
   },
   {
-    path: "/company",
+    path: "/blocks",
     name: "Blocks",
     icon: " ni ni-app text-red",
     component: Blocks,
