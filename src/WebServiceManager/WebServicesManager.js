@@ -18,7 +18,7 @@ export default class WebServicesManager extends React.Component {
       .then(response => response.json())
       .then(responseJson => {
         let statusCode = responseJson.code;
-        callback(statusCode, responseJson.data);
+        callback(statusCode, responseJson);
       })
       .catch(error => {
          console.log(error.message);

@@ -148,7 +148,6 @@ class Packages extends React.Component {
         this.WebServicesManager.getApiCall(
           {
             endPoint: "admin/package/get/"+id,
-            // dataToFetch:id,
             token:tokn,
           },
           (statusCode, response) => {

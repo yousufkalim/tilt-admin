@@ -71,7 +71,7 @@ class Company extends React.Component {
         const dataToUpdate = JSON.stringify(info);
         this.WebServicesManager.postApiCall(
       {
-        endPoint: "admin/register-company",
+        endPoint: "admin/company",
         dataToInsert: dataToUpdate,
         token: localStorage.getItem('token'),
       },
@@ -96,7 +96,6 @@ class Company extends React.Component {
           (statusCode, response) => {
             var companyDetails = [];
             response.companies.map(item=> {
-                console.log(item.block);
                 companyDetails.push(
                   [
                     item.name,

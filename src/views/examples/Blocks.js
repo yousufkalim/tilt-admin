@@ -3,6 +3,9 @@ import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import {Modal,Button,Form} from "react-bootstrap";
 
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+
 // reactstrap components
 import {
   Badge,
@@ -25,6 +28,8 @@ import {
 } from "reactstrap";
 // core components
 import CustomHeader from "components/Headers/CustomHeader.js";
+const animatedComponents = makeAnimated();
+
 
 const columns = [
     { title: 'Name' },
@@ -46,6 +51,7 @@ class Packages extends React.Component {
         super(props);
         this.state = {
             blockList : [],
+            resturantList : [],
             showAdd : false,
             updateBlock : false,
             deleteBlock : false,
@@ -56,6 +62,11 @@ class Packages extends React.Component {
             deliveryTime:'',
             deliveryCost:'',
             currId:'',
+            companyList:[],
+            selectedCompany:[],
+            selectedRestaurant:[],
+            selectedDelivaryPerson:'',
+            deliveryPersonList:[],
         }
     }
     handleClose = ()=> {
@@ -66,10 +77,84 @@ class Packages extends React.Component {
     }
     componentDidMount() {
         this.handleLoadData();
+        this.handleLoadDataForDropDown();
     }
 
+    handleLoadDataForDropDown = () => {
+      // get all companies
+      const tokn = localStorage.getItem('token');
+      let companyListFilter = []
+      let restaurantsListFilter = []
+      let deliveryPersonListFilter = []
+      this.WebServicesManager.getApiCall(
+        {
+          endPoint: "admin/company",
+          token:tokn,
+        },
+        (statusCode, response) => {
+          var companyDetails = [];
+          response.companies.map(item=> {
+              console.log(item.block);
+              companyListFilter.push(
+                {
+                  value:item._id,
+                  label:item.name,
+                }
+              ); 
+            }  
+          );
+          this.setState({companyList:companyListFilter},()=>{
+          });
+        }
+      );
+      // get all restaurants
+      this.WebServicesManager.getApiCall(
+        {
+          endPoint: "restaurant/",
+          token:tokn,
+        },
+        (statusCode, response) => {
+          response.restaurants.map(item=> {
+              restaurantsListFilter.push(
+                
+                {
+                     value : item._id,
+                    label : item.firstName,
+                }
+                
+              ); 
+            }  
+          );
+          this.setState({resturantList:restaurantsListFilter},()=>{
+          });
+        }
+      );
+      // get all delivery persons
+      this.WebServicesManager.getApiCall(
+        {
+          endPoint: "deliveryuser/",
+          token:tokn,
+        },
+        (statusCode, response) => {
+          response.users.map(item=> {
+              deliveryPersonListFilter.push(
+                
+                {
+                    id : item._id,
+                    name : item.firstName,
+                }
+
+              ); 
+            }  
+          );
+          this.setState({deliveryPersonList:deliveryPersonListFilter},()=>{
+          });
+        }
+      );
+    }
+
+
     handleAdd = () => {
-      debugger
       const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = this.state;
       const info = {
           name,
@@ -79,18 +164,69 @@ class Packages extends React.Component {
           deliveryCost
       }
       const dataToUpdate = JSON.stringify(info);
+      debugger;
       this.WebServicesManager.postApiCall(
-    {
-      endPoint: "admin/block",
-      dataToInsert: dataToUpdate,
-      token: localStorage.getItem('token'),
-    },
-    (statusCode, responseUpdate) => {
-      this.handleClose();
-      this.handleResetState();
-      this.handleLoadData();
-    }
-  );
+        {
+          endPoint: "admin/block",
+          dataToInsert: dataToUpdate,
+          token: localStorage.getItem('token'),
+        },
+        (statusCode, responseUpdate) => {
+          this.state.selectedCompany.map((companyval,index)=>{
+            const addCompanyToBlock =JSON.stringify({
+              companyId:companyval.value,
+              blockId:responseUpdate.block._id,
+            })
+            this.WebServicesManager.postApiCall(
+              {
+                endPoint: "admin/block/addCompany",
+                dataToInsert: addCompanyToBlock,
+                token: localStorage.getItem('token'),
+              },
+              (statusCode, responseCompanyAdd) => {
+                // restaurant to 
+                if(index+1 === this.state.selectedCompany.length)
+                {
+                  this.state.selectedRestaurant.map((restaurantVal,restIndex) =>{
+                    const addRestaurantToBlock =JSON.stringify({
+                      restaurantId:restaurantVal.value,
+                      blockId:responseUpdate.block._id,
+                    })
+                    this.WebServicesManager.postApiCall(
+                      {
+                        endPoint: "admin/block/addRestaurant",
+                        dataToInsert: addRestaurantToBlock,
+                        token: localStorage.getItem('token'),
+                      },
+                      (statusCode, responseRestaurantAdd) => {
+                        // delivary person to block
+                        if(restIndex+1 === this.state.selectedRestaurant.length){
+                          const addDelivaryPersonToBlock =JSON.stringify({
+                            deliveryPersonId:this.state.selectedDelivaryPerson,
+                            blockId:responseUpdate.block._id,
+                          })
+                          this.WebServicesManager.postApiCall(
+                            {
+                              endPoint: "admin/block/addDeliveryPerson",
+                              dataToInsert: addDelivaryPersonToBlock,
+                              token: localStorage.getItem('token'),
+                            },
+                            (statusCode, responseDelivaryPersonAdd) => {
+                              this.handleClose();
+                              this.handleResetState();
+                              this.handleLoadData();
+                            }
+                          );
+                        }
+                      }
+                    );
+                  })
+                }
+              }
+            );
+          })
+        }
+      );
   }
 
 
@@ -105,8 +241,9 @@ class Packages extends React.Component {
           (statusCode, response) => {
             console.log("Response:"+JSON.stringify(response));
             var blockDetails = [];
-            debugger;
+            //debugger;
             response.blocks.map(item=> {
+                // debugger
                 blockDetails.push(
                   [
                     item.name,
@@ -146,7 +283,36 @@ class Packages extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({[e.target.name]:e.target.value});
+    this.setState({[e.target.name]:e.target.value},()=>{
+      console.log('handleChange',this.state);
+    });
+  }
+  handleSelectMultiple = (e) => {
+    console.log('test',e);
+    this.setState({selectedCompany:e},()=>{
+      console.log('rsr',this.state);
+    })
+
+    // const options = e.target.options
+    // const arre = [];
+
+    // for (var i = 0 ; i < options.length; i++) {
+    //   if(options[i].selected) {
+    //     arre.push(options[i].value);
+    //     // console.log(options[i].selected,options[i].value)
+    //   }
+    // }
+    
+    // this.setState({[e.target.name]:arre},()=>{
+    //   console.log('handleSelect',this.state);
+    // });
+  }
+  handleSelectMultipleRest = (e) => {
+    console.log('test',e);
+    this.setState({selectedRestaurant: e},()=>{
+      console.log('rsr',this.state);
+    })
+
   }
 
   handleupdateBlock = (id) => {
@@ -154,12 +320,28 @@ class Packages extends React.Component {
         this.WebServicesManager.getApiCall(
           {
             endPoint: "admin/block/get/"+id,
-            // dataToFetch:id,
             token:tokn,
           },
           (statusCode, response) => {
-            const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = response.block;
-            this.setState({name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,currId:id,updateBlock: true,});
+            console.log(response)
+            //debugger;
+            const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,restaurants,companies,deliveryPerson} = response.block;
+            let a = []
+            let b = []
+
+            if(restaurants.length>0){
+              restaurants.map(ite=>{
+                b.push({label:ite.firstName, value:ite._id});
+              })
+            }
+            if(companies.length>0){
+              companies.map(ite=>{
+                a.push({value:ite._id,label:ite.name});
+              })
+            }
+            debugger;
+            this.setState({name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedRestaurant:b,selectedCompany:a,selectedDelivaryPerson:deliveryPerson!==undefined?deliveryPerson._id:'',currId:id,updateBlock: true,},()=>{
+            });
           }
         );
   }
@@ -194,9 +376,60 @@ class Packages extends React.Component {
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        this.handleUpdateClose();
-        this.handleResetState();
-        this.handleLoadData();
+        this.state.selectedCompany.map((companyval,index)=>{
+          const addCompanyToBlock =JSON.stringify({
+            companyId:companyval.value,
+            blockId:responseUpdate.block._id,
+          })
+          this.WebServicesManager.postApiCall(
+            {
+              endPoint: "admin/block/addCompany",
+              dataToInsert: addCompanyToBlock,
+              token: localStorage.getItem('token'),
+            },
+            (statusCode, responseCompanyAdd) => {
+              // restaurant to 
+              if(index+1 === this.state.selectedCompany.length)
+              {
+                this.state.selectedRestaurant.map((restaurantVal,restIndex) =>{
+                  const addRestaurantToBlock =JSON.stringify({
+                    restaurantId:restaurantVal.value,
+                    blockId:responseUpdate.block._id,
+                  })
+                  this.WebServicesManager.postApiCall(
+                    {
+                      endPoint: "admin/block/addRestaurant",
+                      dataToInsert: addRestaurantToBlock,
+                      token: localStorage.getItem('token'),
+                    },
+                    (statusCode, responseRestaurantAdd) => {
+                      // delivary person to block
+                      if(restIndex+1 === this.state.selectedRestaurant.length){
+                        const addDelivaryPersonToBlock =JSON.stringify({
+                          deliveryPersonId:this.state.selectedDelivaryPerson,
+                          blockId:responseUpdate.block._id,
+                        })
+                        this.WebServicesManager.postApiCall(
+                          {
+                            endPoint: "admin/block/addDeliveryPerson",
+                            dataToInsert: addDelivaryPersonToBlock,
+                            token: localStorage.getItem('token'),
+                          },
+                          (statusCode, responseDelivaryPersonAdd) => {
+                            this.handleClose();
+                            this.handleResetState();
+                            this.handleLoadData();
+                          }
+                        );
+                      }
+                    }
+                  );
+                })
+              }
+            }
+          );
+        }
+      )
       }
     );
   }
@@ -258,6 +491,44 @@ class Packages extends React.Component {
             <Form.Label>Delivery Cost</Form.Label>
             <Form.Control type="number" name="deliveryCost" placeholder="Enter Delivery Cost" value={this.state.deliveryCost} onChange={this.handleChange} />
           </Form.Group>
+
+          <Form.Group controlId="exampleForm.ControlSelect1">
+          {/* Company */}
+            <Form.Label>Company List</Form.Label>
+            <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                defaultValue={this.state.selectedCompany}
+                isMulti
+                options={this.state.companyList}
+                onChange={(e)=>this.handleSelectMultiple(e)}
+            />
+            </Form.Group>
+            
+            {/* Restaurant */}
+            <Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Restaurant List</Form.Label>
+            <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                defaultValue={this.state.selectedRestaurant}
+                isMulti
+                options={this.state.resturantList}
+                onChange={(e)=>this.handleSelectMultipleRest(e)}
+
+            />
+              {/* delivary Person */}
+              </Form.Group><Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Delivary Persons List</Form.Label>
+            {console.log('aa',this.state.selectedDelivaryPerson)}
+              
+              <Form.Control as="select" name="selectedDelivaryPerson" value={this.state.selectedDelivaryPerson} onChange={this.handleChange}>
+                <option value="">Select Option</option>
+                {this.state.deliveryPersonList.map(deliveryPerson=>(
+                  <option value={deliveryPerson.id} key={deliveryPerson.id}>{deliveryPerson.name}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
@@ -300,6 +571,43 @@ class Packages extends React.Component {
             <Form.Label>Delivery Cost</Form.Label>
             <Form.Control type="number" name="deliveryCost" placeholder="Enter Delivery Cost" value={this.state.deliveryCost} onChange={this.handleChange} />
           </Form.Group>
+
+          <Form.Group controlId="exampleForm.ControlSelect1">
+          {/* Company */}
+            <Form.Label>Company List</Form.Label>
+            <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                defaultValue={this.state.selectedCompany}
+                isMulti
+                options={this.state.companyList}
+                onChange={(e)=>this.handleSelectMultiple(e)}
+            />
+            </Form.Group>
+            
+            {/* Restaurant */}
+            <Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Restaurant List</Form.Label>
+            <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                defaultValue={this.state.selectedRestaurant}
+                isMulti
+                options={this.state.resturantList}
+                onChange={(e)=>this.handleSelectMultipleRest(e)}
+            />
+              {/* delivary Person */}
+              </Form.Group><Form.Group controlId="exampleForm.ControlSelect1">
+            <Form.Label>Delivary Persons List</Form.Label>
+            {console.log('aa',this.state.selectedDelivaryPerson)}
+              
+              <Form.Control as="select" name="selectedDelivaryPerson" value={this.state.selectedDelivaryPerson} onChange={this.handleChange}>
+                <option value="">Select Option</option>
+                {this.state.deliveryPersonList.map(deliveryPerson=>(
+                  <option value={deliveryPerson.id} key={deliveryPerson.id}>{deliveryPerson.name}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
 
         </Modal.Body>
