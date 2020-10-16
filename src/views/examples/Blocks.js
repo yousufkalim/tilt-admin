@@ -164,7 +164,6 @@ class Packages extends React.Component {
           deliveryCost
       }
       const dataToUpdate = JSON.stringify(info);
-      debugger;
       this.WebServicesManager.postApiCall(
         {
           endPoint: "admin/block",
@@ -339,7 +338,6 @@ class Packages extends React.Component {
                 a.push({value:ite._id,label:ite.name});
               })
             }
-            debugger;
             this.setState({name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedRestaurant:b,selectedCompany:a,selectedDelivaryPerson:deliveryPerson!==undefined?deliveryPerson._id:'',currId:id,updateBlock: true,},()=>{
             });
           }
@@ -355,16 +353,27 @@ class Packages extends React.Component {
       deliveryTime:'',
       deliveryCost:'',
       currId:'',
+      selectedCompany:[],
+      selectedRestaurant : [],
+      selectedDelivaryPerson : "",
     })
   }
   handleUpdateSubmit = () => {
-    const {currId,name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = this.state;
+    const {currId,name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedCompany,selectedRestaurant,selectedDelivaryPerson} = this.state;
+    let updatedCompanies = []
+    selectedCompany.map(cp => updatedCompanies.push(cp.value));
+
+    let updatedRestaurants = []
+    selectedRestaurant.map(cp => updatedRestaurants.push(cp.value));
     const info = {
       name,
       timeForOrder,
       pickUpTime,
       deliveryTime,
-      deliveryCost
+      deliveryCost,
+      companies : updatedCompanies,
+      restaurants : updatedRestaurants,
+      deliveryPerson : selectedDelivaryPerson
     }
 
     const dataToUpdate = JSON.stringify(info);
@@ -376,62 +385,11 @@ class Packages extends React.Component {
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        this.state.selectedCompany.map((companyval,index)=>{
-          const addCompanyToBlock =JSON.stringify({
-            companyId:companyval.value,
-            blockId:responseUpdate.block._id,
-          })
-          this.WebServicesManager.postApiCall(
-            {
-              endPoint: "admin/block/addCompany",
-              dataToInsert: addCompanyToBlock,
-              token: localStorage.getItem('token'),
-            },
-            (statusCode, responseCompanyAdd) => {
-              // restaurant to 
-              if(index+1 === this.state.selectedCompany.length)
-              {
-                this.state.selectedRestaurant.map((restaurantVal,restIndex) =>{
-                  const addRestaurantToBlock =JSON.stringify({
-                    restaurantId:restaurantVal.value,
-                    blockId:responseUpdate.block._id,
-                  })
-                  this.WebServicesManager.postApiCall(
-                    {
-                      endPoint: "admin/block/addRestaurant",
-                      dataToInsert: addRestaurantToBlock,
-                      token: localStorage.getItem('token'),
-                    },
-                    (statusCode, responseRestaurantAdd) => {
-                      // delivary person to block
-                      if(restIndex+1 === this.state.selectedRestaurant.length){
-                        const addDelivaryPersonToBlock =JSON.stringify({
-                          deliveryPersonId:this.state.selectedDelivaryPerson,
-                          blockId:responseUpdate.block._id,
-                        })
-                        this.WebServicesManager.postApiCall(
-                          {
-                            endPoint: "admin/block/addDeliveryPerson",
-                            dataToInsert: addDelivaryPersonToBlock,
-                            token: localStorage.getItem('token'),
-                          },
-                          (statusCode, responseDelivaryPersonAdd) => {
-                            this.handleClose();
-                            this.handleResetState();
-                            this.handleLoadData();
-                          }
-                        );
-                      }
-                    }
-                  );
-                })
-              }
-            }
-          );
-        }
-      )
+        this.handleUpdateClose();
+        this.handleResetState();
+        this.handleLoadData();
       }
-    );
+    )
   }
   render() {
       
@@ -461,7 +419,7 @@ class Packages extends React.Component {
         }
     </>          
         </Container>
-        {/* // ADD User  */}
+        {/* // ADD Block  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Block</Modal.Title>
