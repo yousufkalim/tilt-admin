@@ -95,17 +95,20 @@ class Company extends React.Component {
           },
           (statusCode, response) => {
             var companyDetails = [];
+            console.log(response.companies)
             response.companies.map(item=> {
+              if(item !== null){
                 companyDetails.push(
                   [
                     item.name,
-                    item.deliveryPlace,
-                    item.block !==undefined?item.block.name:"No Block Assigned",
+                    item.deliveryPlace, 
+                    item.block !==null && item.block !== undefined?item.block.name:"No Block Assigned",
                     item._id
                   ]
-                ); 
-              }  
-            );
+                );
+              } 
+            }  
+          );
             this.setState({companyList:companyDetails},()=>{
                 console.log('response state',this.state.companyList);
             });
