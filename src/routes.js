@@ -2,6 +2,7 @@ import Index from "views/Index.js";
 import Users from "views/examples/Users.js";
 import Companies from "views/examples/Companies";
 import Packages from "views/examples/Packages";
+import Discounts from "views/examples/Discounts";
 import Blocks from "views/examples/Blocks";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
@@ -11,7 +12,7 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
 var routes = [
-  {
+  { 
     path: "/index",
     name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
@@ -44,6 +45,13 @@ var routes = [
     name: "Blocks",
     icon: " ni ni-app text-red",
     component: Blocks,
+    layout: "/admin"
+  },
+  {
+    path: "/discounts",
+    name: "Discounts",
+    icon: "fas fa-hand-holding-usd text-black",
+    component: Discounts,
     layout: "/admin"
   },
   {

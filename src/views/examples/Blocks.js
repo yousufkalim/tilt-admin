@@ -33,7 +33,7 @@ const animatedComponents = makeAnimated();
 
 const columns = [
     { title: 'Name' },
-    { title: 'Resturants'},
+    { title: 'Restaurants'},
     { title: 'Companies'},
     { title: 'Order Time'},
     { title: 'Pick up Time'},
@@ -94,13 +94,16 @@ class Packages extends React.Component {
         (statusCode, response) => {
           var companyDetails = [];
           response.companies.map(item=> {
-              console.log(item.block);
-              companyListFilter.push(
-                {
-                  value:item._id,
-                  label:item.name,
-                }
-              ); 
+            debugger;
+              console.log('blick',item.block);
+              if(item.block === null){
+                companyListFilter.push(
+                  {
+                    value:item._id,
+                    label:item.name,
+                  }
+                );
+              } 
             }  
           );
           this.setState({companyList:companyListFilter},()=>{
@@ -243,11 +246,18 @@ class Packages extends React.Component {
             //debugger;
             response.blocks.map(item=> {
                 // debugger
+                var finalString = "<ul>"
+                var endString = "</ul>"
+                var middleString = "";
+                item.companies.length !== 0 && item.companies.map(comp=>{
+                  middleString = middleString+`<li>${comp.name}</li>`;
+                })
+                finalString = `${finalString} ${middleString} ${endString}`;
                 blockDetails.push(
                   [
                     item.name,
                     item.restaurants.length !== 0?item.restaurants.map(rest=>rest.firstName):"No resturant available",
-                    item.companies.length !==0 ?item.companies.map(comp=>comp.name):"No companies available",
+                    item.companies.length !==0 ?finalString:"No companies available",
                     item.timeForOrder,
                     item.pickUpTime,
                     item.deliveryTime,

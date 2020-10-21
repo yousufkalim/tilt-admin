@@ -320,7 +320,9 @@ getApiwithParamReturnMsg(params, callback) {
         "Content-Type": "application/json"
       }
     if(params.token !== undefined){headeris["Authorization"]="Bearer "+params.token}
-    baseURL = baseURL+"/"+params.userID;
+    if(params.userID){
+      baseURL = baseURL+"/"+params.userID;
+    }
 
     // baseURL = baseURL;
     fetch(baseURL, {
