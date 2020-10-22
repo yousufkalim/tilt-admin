@@ -24,7 +24,7 @@ export default class DataTableComponent extends Component {
           createdCell: (td, cellData, rowData, row, col) =>
             ReactDOM.render(
               <React.Fragment>
-                <Button variant="success" onClick={()=>this.props.actions.updateAction(cellData)} style={{ width:'150px',marginTop:10 }}>Edit</Button>
+                <Button variant="success" onClick={()=>this.props.actions.updateAction(cellData)} style={{ width:'150px',marginTop:10 }}>Edit</Button><br/>
                 <span> </span>
                 <Button variant="danger" onClick={()=>this.props.actions.deleteAction(cellData)} style={{width:'150px',marginTop:10 }}>Delete</Button>
                 {/* {this.props.is_restaurant === true?
@@ -32,7 +32,7 @@ export default class DataTableComponent extends Component {
                 :""} */}
                 {this.props.is_menu || this.props.is_restaurant === true?
                 <>
-                <a href={"/dishes/"+cellData}><Button variant="primary" style={{width:'150px',marginTop:10 }}>View Dishes</Button></a>
+                <a href={"/dishes/"+cellData}><Button variant="primary" style={{width:'150px',marginTop:10 }}>View Dishes</Button></a><br/>
                 <a href={"/table/"+cellData}><Button variant="secondary" style={{width:'150px',marginTop:10 }}>View Tables</Button></a>
                 </>
                 :""}

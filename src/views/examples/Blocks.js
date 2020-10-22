@@ -35,11 +35,11 @@ const columns = [
     { title: 'Name' },
     { title: 'Restaurants'},
     { title: 'Companies'},
-    { title: 'Order Time'},
-    { title: 'Pick up Time'},
-    { title: 'Delivery Time'},
-    { title: 'Delivery Cost'},
-    { title: 'Delivery Person'},
+    { title: 'Order<br/>Time'},
+    { title: 'PickUp<br/>Time'},
+    { title: 'Delivery<br/>Time'},
+    { title: 'Delivery<br/>Cost'},
+    { title: 'Delivery<br/>Person'},
     {title:'Actions'},
   
   ];
@@ -92,11 +92,10 @@ class Packages extends React.Component {
           token:tokn,
         },
         (statusCode, response) => {
+          debugger;
           var companyDetails = [];
           response.companies.map(item=> {
-            debugger;
-              console.log('blick',item.block);
-              if(item.block === null){
+              if(item.block === null || item.block === undefined){
                 companyListFilter.push(
                   {
                     value:item._id,
@@ -158,13 +157,23 @@ class Packages extends React.Component {
 
 
     handleAdd = () => {
-      const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost} = this.state;
+      const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedCompany,selectedDelivaryPerson,selectedRestaurant} = this.state;
+      var ll =[];
+      var l2 =[];
+
+      selectedCompany.map(com=>ll.push(com.value));
+      selectedRestaurant.map(rest=>l2.push(rest.value));
+
+      debugger
       const info = {
           name,
           timeForOrder,
           pickUpTime,
           deliveryTime,
-          deliveryCost
+          deliveryCost,
+          companies : ll,
+          restaurants : l2,
+          deliveryPerson:selectedDelivaryPerson
       }
       const dataToUpdate = JSON.stringify(info);
       this.WebServicesManager.postApiCall(
@@ -174,63 +183,13 @@ class Packages extends React.Component {
           token: localStorage.getItem('token'),
         },
         (statusCode, responseUpdate) => {
-          this.state.selectedCompany.map((companyval,index)=>{
-            const addCompanyToBlock =JSON.stringify({
-              companyId:companyval.value,
-              blockId:responseUpdate.block._id,
-            })
-            this.WebServicesManager.postApiCall(
-              {
-                endPoint: "admin/block/addCompany",
-                dataToInsert: addCompanyToBlock,
-                token: localStorage.getItem('token'),
-              },
-              (statusCode, responseCompanyAdd) => {
-                // restaurant to 
-                if(index+1 === this.state.selectedCompany.length)
-                {
-                  this.state.selectedRestaurant.map((restaurantVal,restIndex) =>{
-                    const addRestaurantToBlock =JSON.stringify({
-                      restaurantId:restaurantVal.value,
-                      blockId:responseUpdate.block._id,
-                    })
-                    this.WebServicesManager.postApiCall(
-                      {
-                        endPoint: "admin/block/addRestaurant",
-                        dataToInsert: addRestaurantToBlock,
-                        token: localStorage.getItem('token'),
-                      },
-                      (statusCode, responseRestaurantAdd) => {
-                        // delivary person to block
-                        if(restIndex+1 === this.state.selectedRestaurant.length){
-                          const addDelivaryPersonToBlock =JSON.stringify({
-                            deliveryPersonId:this.state.selectedDelivaryPerson,
-                            blockId:responseUpdate.block._id,
-                          })
-                          this.WebServicesManager.postApiCall(
-                            {
-                              endPoint: "admin/block/addDeliveryPerson",
-                              dataToInsert: addDelivaryPersonToBlock,
-                              token: localStorage.getItem('token'),
-                            },
-                            (statusCode, responseDelivaryPersonAdd) => {
-                              this.handleClose();
-                              this.handleResetState();
-                              this.handleLoadData();
-                            }
-                          );
-                        }
-                      }
-                    );
-                  })
-                }
-              }
-            );
-          })
+           
+          this.handleClose();
+          this.handleResetState();
+          this.handleLoadData();
         }
       );
-  }
-
+    }
 
   handleLoadData = () => {
       this.setState({blockList:[]});
@@ -249,7 +208,7 @@ class Packages extends React.Component {
                 var finalString = "<ul>"
                 var endString = "</ul>"
                 var middleString = "";
-                item.companies.length !== 0 && item.companies.map(comp=>{
+                item.companies.length !== 0 && item.companies !== null && item.companies.map(comp=>{
                   middleString = middleString+`<li>${comp.name}</li>`;
                 })
                 finalString = `${finalString} ${middleString} ${endString}`;
@@ -287,6 +246,7 @@ class Packages extends React.Component {
         },
         (statusCode, response) => {
           this.handleLoadData();
+          this.handleLoadDataForDropDown()
         }
       );
     }
@@ -371,10 +331,10 @@ class Packages extends React.Component {
   handleUpdateSubmit = () => {
     const {currId,name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedCompany,selectedRestaurant,selectedDelivaryPerson} = this.state;
     let updatedCompanies = []
-    selectedCompany.map(cp => updatedCompanies.push(cp.value));
+    selectedCompany !== null && selectedCompany.map(cp => updatedCompanies.push(cp.value));
 
     let updatedRestaurants = []
-    selectedRestaurant.map(cp => updatedRestaurants.push(cp.value));
+    selectedRestaurant !== null && selectedRestaurant.map(cp => updatedRestaurants.push(cp.value));
     const info = {
       name,
       timeForOrder,

@@ -29,7 +29,7 @@ import CustomHeader from "components/Headers/CustomHeader.js";
 const columns = [
     { title: 'First Name' },
     { title: 'Last Name'},
-    { title: 'Status'},
+    { title: 'Company'},
     {title:'Actions'},
   
   ];
@@ -52,12 +52,6 @@ class Users extends React.Component {
         }
     }
 
-    // componentDidUpdate() {
-    //   if(this.state.didUpdate !== newDidUpdate){
-    //     this.handleLoadData();
-    //   }
-    // }
-
     handleClose = ()=> {
       this.setState({showAdd : false})
     }
@@ -77,6 +71,7 @@ class Users extends React.Component {
             token:tokn,
           },
           (statusCode, response) => {
+            console.log(response)
             var userDatais = [];
             response.users.map(item=> {
               if(item.status !== 'deleted'){
@@ -84,7 +79,7 @@ class Users extends React.Component {
                   [
                     item.firstName,
                     item.lastName,
-                    item.status,
+                    item.user.company !== undefined? item.user.company.name : "No company",
                     item._id
                   ]
                 );
@@ -92,7 +87,7 @@ class Users extends React.Component {
               }  
             );
             this.setState({userList:userDatais},()=>{
-                console.log('response state',this.state.userList);
+                // console.log('response state',this.state.userList);
             });
           }
         );
@@ -161,8 +156,6 @@ class Users extends React.Component {
         token: localStorage.getItem('token'),
       },
       (statusCode, responseUpdate) => {
-        debugger;
-        console.log("updates");
         this.handleResetState();
         this.handleLoadData();
       }

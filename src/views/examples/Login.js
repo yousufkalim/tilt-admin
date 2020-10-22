@@ -71,19 +71,10 @@ LogIn = e => {
   );
 };
 componentWillMount() {
-  var token = localStorage.getItem('userdata');
-  if(token !== null && token !== undefined && token !== ""){
-    var decoded = jwtDecode(token);
-    var userinfo = JSON.parse(Base64.decode(decoded.userData));
-    this.props.history.push(`/admin/user/${userinfo.id}`);
-  }else{
-    localStorage.getItem("userdata", "");
-    localStorage.setItem("reload", "true");
-  }
-
-  var cookieConcent = localStorage.getItem("acceptCookies");
-  if(cookieConcent !== undefined || cookieConcent !== null){
-    this.setState({concent:true})
+  const user = localStorage.getItem('token');
+  debugger;
+  if(user){
+    window.location.replace('/admin/index');
   }
 }
 functionData(response) {
@@ -107,8 +98,8 @@ passwordHide = () => {
       <>
         <Col lg="5" md="7">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
-              <div className="text-muted text-center mt-2 mb-3">
+            {/* <CardHeader className="bg-transparent pb-5"> */}
+              {/* <div className="text-muted text-center mt-2 mb-3">
                 <small>Sign in with</small>
               </div>
               <div className="btn-wrapper text-center">
@@ -140,11 +131,11 @@ passwordHide = () => {
                   </span>
                   <span className="btn-inner--text">Google</span>
                 </Button>
-              </div>
-            </CardHeader>
+              </div> */}
+            {/* </CardHeader> */}
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
+                <small>SIGN IN</small>
               </div>
               <Form role="form">
                 <FormGroup className="mb-3">
@@ -198,7 +189,7 @@ passwordHide = () => {
                 <small>Forgot password?</small>
               </a>
             </Col>
-            <Col className="text-right" xs="6">
+            {/* <Col className="text-right" xs="6">
               <a
                 className="text-light"
                 href="#pablo"
@@ -206,7 +197,7 @@ passwordHide = () => {
               >
                 <small>Create new account</small>
               </a>
-            </Col>
+            </Col> */}
           </Row>
         </Col>
       </>

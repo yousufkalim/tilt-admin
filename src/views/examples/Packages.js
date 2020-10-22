@@ -28,10 +28,10 @@ import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
     { title: 'Name' },
-    { title: 'Price'},
+    { title: 'Package Price'},
     { title: 'Credits'},
-    { title: 'Off Price'},
-    { title: 'Expiration'},
+    { title: 'Discount on delivery fees'},
+    { title: 'Expiration (Days)'},
     {title:'Actions'},
   
   ];
