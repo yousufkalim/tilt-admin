@@ -52,6 +52,7 @@ class Packages extends React.Component {
         this.state = {
             blockList : [],
             resturantList : [],
+            setBtnDisable : false,
             showAdd : false,
             updateBlock : false,
             deleteBlock : false,
@@ -73,11 +74,15 @@ class Packages extends React.Component {
       this.setState({showAdd : false})
     }
     handleUpdateClose = ()=> {
-      this.setState({updateBlock : false})
+      this.setState({updateBlock : false},()=>{
+        this.handleResetState();
+        
+      })
     }
     componentDidMount() {
         this.handleLoadData();
         this.handleLoadDataForDropDown();
+        this.handleBtnDisable()
     }
 
     handleLoadDataForDropDown = () => {
@@ -92,7 +97,6 @@ class Packages extends React.Component {
           token:tokn,
         },
         (statusCode, response) => {
-          debugger;
           var companyDetails = [];
           response.companies.map(item=> {
               if(item.block === null || item.block === undefined){
@@ -117,14 +121,14 @@ class Packages extends React.Component {
         },
         (statusCode, response) => {
           response.restaurants.map(item=> {
+            if(item.block === null || item.block === undefined){
               restaurantsListFilter.push(
-                
                 {
-                     value : item._id,
-                    label : item.firstName,
+                  value:item._id,
+                  label:item.name,
                 }
-                
-              ); 
+              );
+            } 
             }  
           );
           this.setState({resturantList:restaurantsListFilter},()=>{
@@ -139,14 +143,15 @@ class Packages extends React.Component {
         },
         (statusCode, response) => {
           response.users.map(item=> {
+            if(item.block === null || item.block === undefined){
               deliveryPersonListFilter.push(
                 
                 {
                     id : item._id,
                     name : item.firstName,
                 }
-
-              ); 
+              );
+            } 
             }  
           );
           this.setState({deliveryPersonList:deliveryPersonListFilter},()=>{
@@ -187,6 +192,7 @@ class Packages extends React.Component {
           this.handleClose();
           this.handleResetState();
           this.handleLoadData();
+          this.handleLoadDataForDropDown();
         }
       );
     }
@@ -200,7 +206,6 @@ class Packages extends React.Component {
             token:tokn,
           },
           (statusCode, response) => {
-            console.log("Response:"+JSON.stringify(response));
             var blockDetails = [];
             //debugger;
             response.blocks.map(item=> {
@@ -253,11 +258,10 @@ class Packages extends React.Component {
   };
   handleChange = (e) => {
     this.setState({[e.target.name]:e.target.value},()=>{
-      console.log('handleChange',this.state);
+      this.handleBtnDisable();
     });
   }
   handleSelectMultiple = (e) => {
-    console.log('test',e);
     this.setState({selectedCompany:e},()=>{
       console.log('rsr',this.state);
     })
@@ -277,7 +281,6 @@ class Packages extends React.Component {
     // });
   }
   handleSelectMultipleRest = (e) => {
-    console.log('test',e);
     this.setState({selectedRestaurant: e},()=>{
       console.log('rsr',this.state);
     })
@@ -292,7 +295,6 @@ class Packages extends React.Component {
             token:tokn,
           },
           (statusCode, response) => {
-            console.log(response)
             //debugger;
             const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,restaurants,companies,deliveryPerson} = response.block;
             let a = []
@@ -309,6 +311,7 @@ class Packages extends React.Component {
               })
             }
             this.setState({name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedRestaurant:b,selectedCompany:a,selectedDelivaryPerson:deliveryPerson!==undefined?deliveryPerson._id:'',currId:id,updateBlock: true,},()=>{
+              this.handleBtnDisable();
             });
           }
         );
@@ -326,6 +329,8 @@ class Packages extends React.Component {
       selectedCompany:[],
       selectedRestaurant : [],
       selectedDelivaryPerson : "",
+    },()=>{
+      this.handleBtnDisable();
     })
   }
   handleUpdateSubmit = () => {
@@ -358,8 +363,23 @@ class Packages extends React.Component {
         this.handleUpdateClose();
         this.handleResetState();
         this.handleLoadData();
+        this.handleLoadDataForDropDown();
       }
     )
+  }
+  handleBtnDisable = () => {
+    debugger
+    const {name,timeForOrder,pickUpTime,deliveryTime,deliveryCost,selectedCompany,selectedRestaurant,selectedDelivaryPerson} = this.state;
+    if(name !== "" && timeForOrder !== "" && pickUpTime !== "" && deliveryTime !== "" && deliveryCost !== "" && selectedCompany !== "" && selectedRestaurant !== "" && selectedDelivaryPerson !== "" ){
+      this.setState({
+        setBtnDisable : false
+      })
+    }else{
+
+      this.setState({
+        setBtnDisable : true
+      })
+    }
   }
   render() {
       
@@ -375,9 +395,8 @@ class Packages extends React.Component {
       <>
         <CustomHeader />
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container className="mt-4" fluid>
           {/* Table */}
-          return (
     <>
         {this.state.blockList.length >0?
             <DataTableComponent actionCol={8} columns={columns} data={this.state.blockList} actions={actionsList} />
@@ -447,9 +466,7 @@ class Packages extends React.Component {
             />
               {/* delivary Person */}
               </Form.Group><Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>Delivary Persons List</Form.Label>
-            {console.log('aa',this.state.selectedDelivaryPerson)}
-              
+            <Form.Label>Delivary Persons List</Form.Label>              
               <Form.Control as="select" name="selectedDelivaryPerson" value={this.state.selectedDelivaryPerson} onChange={this.handleChange}>
                 <option value="">Select Option</option>
                 {this.state.deliveryPersonList.map(deliveryPerson=>(
@@ -462,7 +479,7 @@ class Packages extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={this.handleAdd}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleAdd}>
             Add
           </Button>
         </Modal.Footer>
@@ -527,7 +544,6 @@ class Packages extends React.Component {
               {/* delivary Person */}
               </Form.Group><Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Delivary Persons List</Form.Label>
-            {console.log('aa',this.state.selectedDelivaryPerson)}
               
               <Form.Control as="select" name="selectedDelivaryPerson" value={this.state.selectedDelivaryPerson} onChange={this.handleChange}>
                 <option value="">Select Option</option>
@@ -543,7 +559,7 @@ class Packages extends React.Component {
           <Button variant="secondary" onClick={this.handleUpdateClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleUpdateSubmit}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleUpdateSubmit}>
             Update
           </Button>
         </Modal.Footer>

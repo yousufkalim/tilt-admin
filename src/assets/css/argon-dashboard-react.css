@@ -19068,3 +19068,13 @@ button:focus,
 .table .badge i {
   margin-right: 10px;
 }
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid #afb3af !important;
+  border-radius: 4px !important;
+}
+
+.AddBtn {
+  width: 200px;
+}

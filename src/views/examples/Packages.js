@@ -43,6 +43,7 @@ class Packages extends React.Component {
         super(props);
         this.state = {
             packageList : [],
+            setBtnDisable : false,
             showAdd : false,
             updatePackage : false,
             deletePackage : false,
@@ -60,11 +61,15 @@ class Packages extends React.Component {
     handleClose = ()=> {
       this.setState({showAdd : false})
     }
-    handleUpdateClose = ()=> {
-      this.setState({updatePackage : false})
+     handleUpdateClose = ()=> {
+      this.setState({updatePackage : false},()=>{
+        this.handleResetState();
+        
+      })
     }
     componentDidMount() {
         this.handleLoadData();
+        this.handleBtnDisable()
     }
 
     handleAdd = () => {
@@ -140,7 +145,9 @@ class Packages extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({[e.target.name]:e.target.value});
+    this.setState({[e.target.name]:e.target.value},()=>{
+      this.handleBtnDisable();
+    });
   }
 
   handleupdatePackage = (id) => {
@@ -153,7 +160,9 @@ class Packages extends React.Component {
           (statusCode, response) => {
             debugger;
             const {name,price,offPrice,expiration,credits} = response.package;
-            this.setState({name,price,offPrice,expiration,credits,currId:id,updatePackage: true,});
+            this.setState({name,price,offPrice,expiration,credits,currId:id,updatePackage: true,},()=>{
+              this.handleBtnDisable();
+            });
           }
         );
   }
@@ -167,6 +176,8 @@ class Packages extends React.Component {
       expiration:'',
       credits:'',
       currId:'',
+    },()=>{
+      this.handleBtnDisable();
     })
   }
   handleUpdateSubmit = () => {
@@ -194,6 +205,19 @@ class Packages extends React.Component {
       }
     );
   }
+  handleBtnDisable = () => {
+    const {name,price,offPrice,credits,expiration} = this.state;
+    if(name !== "" && price !== "" && offPrice !== "" && credits !== "" && expiration !== "" ){
+      this.setState({
+        setBtnDisable : false
+      })
+    }else{
+
+      this.setState({
+        setBtnDisable : true
+      })
+    }
+  }
   render() {
       
     const actionsList = {
@@ -208,9 +232,8 @@ class Packages extends React.Component {
       <>
         <CustomHeader />
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container className="mt-4" fluid>
           {/* Table */}
-          return (
     <>
         {this.state.packageList.length >0?
             <DataTableComponent actionCol={5} columns={columns} data={this.state.packageList} actions={actionsList} />
@@ -257,7 +280,7 @@ class Packages extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={this.handleAdd}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleAdd}>
             Add
           </Button>
         </Modal.Footer>
@@ -301,7 +324,7 @@ class Packages extends React.Component {
           <Button variant="secondary" onClick={this.handleUpdateClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleUpdateSubmit}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleUpdateSubmit}>
             Update
           </Button>
         </Modal.Footer>

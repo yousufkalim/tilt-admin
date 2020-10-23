@@ -53,9 +53,9 @@ export default class DataTableComponent extends Component {
   render() {
     return (
       <div>
-          {this.props.is_order !== true?
+          {this.props.hideAdd !== true?
           <Row style={{flexDirection:'row-reverse'}}>
-            <Button vairent="primary" onClick={this.props.actions.addAction}>Add</Button>
+            <Button vairent="primary" className = "AddBtn" onClick={this.props.actions.addAction}>Add</Button>
           </Row>:""}
           <hr/>
           <Row>

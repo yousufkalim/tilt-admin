@@ -41,6 +41,7 @@ class Company extends React.Component {
         super(props);
         this.state = {
             companyList : [],
+            setBtnDisable : false,
             showAdd : false,
             updateCompany : false,
             deleteCompany : false,
@@ -55,10 +56,13 @@ class Company extends React.Component {
       this.setState({showAdd : false})
     }
     handleUpdateClose = ()=> {
-      this.setState({updateCompany : false})
+      this.setState({updateCompany : false},()=>{
+        this.handleResetState();
+      })
     }
     componentDidMount() {
         this.handleLoadData();
+        this.handleBtnDisable()
     }
 
     handleAdd = () => {
@@ -117,7 +121,7 @@ class Company extends React.Component {
   }
     // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?"+id);
+    const confirmis = window.confirm("Are you sure you want to delete?");
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -133,7 +137,9 @@ class Company extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({[e.target.name]:e.target.value});
+    this.setState({[e.target.name]:e.target.value},()=>{
+      this.handleBtnDisable();
+    });
   }
 
   handleUpdateCompany = (id) => {
@@ -148,7 +154,9 @@ class Company extends React.Component {
           (statusCode, response) => {
             // debugger;
             const {name,deliveryPlace,block} = response.company;
-            this.setState({name,deliveryPlace,block,currId:id,updateCompany: true,});
+            this.setState({name,deliveryPlace,block,currId:id,updateCompany: true,},()=>{
+              this.handleBtnDisable();
+            });
           }
         );
   }
@@ -184,6 +192,20 @@ class Company extends React.Component {
       }
     );
   }
+
+  handleBtnDisable = () => {
+    const {name,deliveryPlace} = this.state;
+    if(name !== "" && deliveryPlace !== ""){
+      this.setState({
+        setBtnDisable : false
+      })
+    }else{
+
+      this.setState({
+        setBtnDisable : true
+      })
+    }
+  }
   render() {
       
     const actionsList = {
@@ -198,9 +220,8 @@ class Company extends React.Component {
       <>
         <CustomHeader />
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container className="mt-4" fluid>
           {/* Table */}
-          return (
     <>
         {this.state.companyList.length >0?
             <DataTableComponent actionCol={3} columns={columns} data={this.state.companyList} actions={actionsList} />
@@ -233,7 +254,7 @@ class Company extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleAdd}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleAdd}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -256,17 +277,17 @@ class Company extends React.Component {
             <Form.Control type="text" name="deliveryPlace" placeholder="Enter Deliver Place" value={this.state.deliveryPlace} onChange={this.handleChange} />
           </Form.Group>
 
-          <Form.Group controlId="formBasicEmail">
+          {/* <Form.Group controlId="formBasicEmail">
             <Form.Label>Block</Form.Label>
             <Form.Control type="text" name="block" placeholder="Enter block" value={this.state.block} onChange={this.handleChange} />
-          </Form.Group>
+          </Form.Group> */}
 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleUpdateClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleUpdateSubmit}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleUpdateSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>

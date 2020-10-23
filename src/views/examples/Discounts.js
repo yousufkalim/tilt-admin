@@ -40,6 +40,7 @@ class Discounts extends React.Component {
         super(props);
         this.state = {
             discountList : [],
+            setBtnDisable : false,
             showAdd : false,
             updateDiscount : false,
             deletePackage : false,
@@ -51,10 +52,14 @@ class Discounts extends React.Component {
       this.setState({showAdd : false})
     }
     handleUpdateClose = ()=> {
-      this.setState({updateDiscount : false})
+      this.setState({updateDiscount : false},()=>{
+        this.handleResetState();
+        
+      })
     }
     componentDidMount() {
         this.handleLoadData();
+        this.handleBtnDisable()
     }
 
     handleAdd = () => {
@@ -127,7 +132,9 @@ class Discounts extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({[e.target.name]:e.target.value});
+    this.setState({[e.target.name]:e.target.value},()=>{
+      this.handleBtnDisable();
+    });
   }
 
   handleupdateDiscount = (id) => {
@@ -140,7 +147,9 @@ class Discounts extends React.Component {
           (statusCode, response) => {
             debugger;
             const {leastCartValue,referralDiscount} = response.discounts[0];
-            this.setState({leastCartValue,referralDiscount,currId:id,updateDiscount : true});
+            this.setState({leastCartValue,referralDiscount,currId:id,updateDiscount : true},()=>{
+              this.handleBtnDisable();
+            });
           }
         );
   }
@@ -151,6 +160,8 @@ class Discounts extends React.Component {
         leastCartValue:'',
         referralDiscount:'',
         currId:'',
+    },()=>{
+      this.handleBtnDisable();
     })
   }
   handleUpdateSubmit = () => {
@@ -175,8 +186,20 @@ class Discounts extends React.Component {
       }
     );
   }
+  handleBtnDisable = () => {
+    const {leastCartValue,referralDiscount} = this.state;
+    if(leastCartValue !== "" && referralDiscount !== "" ){
+      this.setState({
+        setBtnDisable : false
+      })
+    }else{
+
+      this.setState({
+        setBtnDisable : true
+      })
+    }
+  }
   render() {
-      
     const actionsList = {
       addAction : ()=>{
         this.setState({showAdd: true})
@@ -189,12 +212,11 @@ class Discounts extends React.Component {
       <>
         <CustomHeader />
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container className="mt-4" fluid>
           {/* Table */}
-          return (
     <>
         {this.state.discountList.length >0?
-            <DataTableComponent actionCol={2} columns={columns} data={this.state.discountList} actions={actionsList} />
+            <DataTableComponent actionCol={2} columns={columns} data={this.state.discountList} actions={actionsList} hideAdd = {true}/>
         :
             <>
             <hr/>
@@ -214,7 +236,7 @@ class Discounts extends React.Component {
 
         <Form.Group controlId="formBasicEmail">
             <Form.Label>leastCartValue</Form.Label>
-            <Form.Control type="text" name="leastCartValue" placeholder="Enter Package Name" value={this.state.leastCartValue} onChange={this.handleChange} />
+            <Form.Control type="text" name="leastCartValue" placeholder="Enter value" value={this.state.leastCartValue} onChange={this.handleChange} />
           </Form.Group>
 
           <Form.Group controlId="formBasicEmail">
@@ -228,7 +250,7 @@ class Discounts extends React.Component {
           <Button variant="secondary" onClick={this.handleUpdateClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleUpdateSubmit}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleUpdateSubmit}>
             Update
           </Button>
         </Modal.Footer>

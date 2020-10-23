@@ -45,6 +45,7 @@ class Users extends React.Component {
             updateUser : false,
             deleteUser : false,
             didUpdate:false,
+            setBtnDisable : false,
             firstName:'',
             lastName:'',
             email:'',
@@ -110,20 +111,22 @@ class Users extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({[e.target.name]:e.target.value});
+    this.setState({[e.target.name]:e.target.value},()=>{
+      this.handleBtnDisable();
+    });
   }
 
   handleUpdateUser = (id) => {
-    // debugger
+    debugger
     var tokn= localStorage.getItem('token');
         this.WebServicesManager.getApiCall(
           {
-            endPoint: "user/get/"+id,
+            endPoint: "user/getbyid/"+id,
             // dataToFetch:id,
             token:tokn,
           },
           (statusCode, response) => {
-            // debugger;
+            debugger;
             const {email,firstName,lastName} = response.user;
             this.setState({firstName,lastName,email,currId:id,updateUser: true,});
           }
@@ -137,6 +140,7 @@ class Users extends React.Component {
       lastName:'',
       email:'',
       currId:'',
+      updateUser : false
     })
   }
   handleUpdateSubmit = () => {
@@ -161,6 +165,20 @@ class Users extends React.Component {
       }
     );
   }
+
+  handleBtnDisable = () => {
+    const {firstName,lastName} = this.state;
+    if(firstName !== "" && lastName !== ""){
+      this.setState({
+        setBtnDisable : false
+      })
+    }else{
+
+      this.setState({
+        setBtnDisable : true
+      })
+    }
+  }
   render() {
       
     const actionsList = {
@@ -175,12 +193,11 @@ class Users extends React.Component {
       <>
         <CustomHeader />
         {/* Page content */}
-        <Container className="mt--7" fluid>
+        <Container fluid className = "mt-2">
           {/* Table */}
-          return (
     <>
         {this.state.userList.length >0?
-            <DataTableComponent actionCol={3} columns={columns} data={this.state.userList} actions={actionsList} />
+            <DataTableComponent actionCol={3} columns={columns} data={this.state.userList} actions={actionsList} hideAdd = {true}  />
         :
             <>
             <hr/>
@@ -190,7 +207,7 @@ class Users extends React.Component {
     </>          
         </Container>
         {/* // ADD User  */}
-        <Modal show={this.state.showAdd} onHide={this.handleClose}>
+        {/* <Modal show={this.state.showAdd} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add User</Modal.Title>
         </Modal.Header>
@@ -203,7 +220,7 @@ class Users extends React.Component {
             Save Changes
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
       {/* UPDATE User */}
       <Modal show={this.state.updateUser} onHide={this.handleUpdateClose}>
@@ -232,7 +249,7 @@ class Users extends React.Component {
           <Button variant="secondary" onClick={this.handleUpdateClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleUpdateSubmit}>
+          <Button variant="primary" disabled ={this.state.setBtnDisable} onClick={this.handleUpdateSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>
