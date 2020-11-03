@@ -239,6 +239,9 @@ class Packages extends React.Component {
             <DataTableComponent actionCol={5} columns={columns} data={this.state.packageList} actions={actionsList} />
         :
             <>
+            <Row style={{flexDirection:'row-reverse'}}>
+              <Button vairent="primary" className = "AddBtn" onClick={()=>{this.setState({showAdd: true})}}>Add</Button>
+            </Row>
             <hr/>
             <p style={{textAlign:'center'}}>No Record Found</p>
             </>

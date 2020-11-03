@@ -227,6 +227,9 @@ class Company extends React.Component {
             <DataTableComponent actionCol={3} columns={columns} data={this.state.companyList} actions={actionsList} />
         :
             <>
+            <Row style={{flexDirection:'row-reverse'}}>
+              <Button vairent="primary" className = "AddBtn" onClick={()=>{this.setState({showAdd: true})}}>Add</Button>
+            </Row>
             <hr/>
             <p style={{textAlign:'center'}}>No Record Found</p>
             </>

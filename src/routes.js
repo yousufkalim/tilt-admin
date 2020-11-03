@@ -3,7 +3,9 @@ import Users from "views/examples/Users.js";
 import Companies from "views/examples/Companies";
 import Packages from "views/examples/Packages";
 import Discounts from "views/examples/Discounts";
+import Restaurant from "views/examples/Restaurant";
 import Blocks from "views/examples/Blocks";
+import DeliveryPerson from "views/examples/DeliveryPerson";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
@@ -24,6 +26,13 @@ var routes = [
     name: "Users",
     icon: "ni ni-single-02 text-yellow",
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/restaurants",
+    name: "Restaurants",
+    icon: "ni ni-single-02 text-green",
+    component: Restaurant,
     layout: "/admin"
   },
   {
@@ -48,12 +57,20 @@ var routes = [
     layout: "/admin"
   },
   {
+    path: "/delivery-person",
+    name: "Delivery Person",
+    icon: "ni ni-single-02 text-red",
+    component: DeliveryPerson,
+    layout: "/admin"
+  },
+  {
     path: "/discounts",
     name: "Discounts",
     icon: "fas fa-hand-holding-usd text-black",
     component: Discounts,
     layout: "/admin"
   },
+  
 
   // {
   //   path: "/maps",

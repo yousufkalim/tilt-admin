@@ -68,6 +68,7 @@ class Packages extends React.Component {
             selectedRestaurant:[],
             selectedDelivaryPerson:'',
             deliveryPersonList:[],
+            allDeliveryPersonList:[],
         }
     }
     handleClose = ()=> {
@@ -125,7 +126,7 @@ class Packages extends React.Component {
               restaurantsListFilter.push(
                 {
                   value:item._id,
-                  label:item.name,
+                  label:item.firstName,
                 }
               );
             } 
@@ -136,6 +137,7 @@ class Packages extends React.Component {
         }
       );
       // get all delivery persons
+      let allDevPerson = [] 
       this.WebServicesManager.getApiCall(
         {
           endPoint: "deliveryuser/",
@@ -143,18 +145,22 @@ class Packages extends React.Component {
         },
         (statusCode, response) => {
           response.users.map(item=> {
-            if(item.block === null || item.block === undefined){
-              deliveryPersonListFilter.push(
-                
-                {
-                    id : item._id,
-                    name : item.firstName,
-                }
-              );
-            } 
+              if(item.block === null || item.block === undefined){
+                deliveryPersonListFilter.push(
+                  
+                  {
+                      id : item._id,
+                      name : item.firstName,
+                  }
+                );
+              }
+              allDevPerson.push({
+                id : item._id,
+                name : item.firstName,
+              })
             }  
           );
-          this.setState({deliveryPersonList:deliveryPersonListFilter},()=>{
+          this.setState({deliveryPersonList:deliveryPersonListFilter,allDeliveryPersonList:allDevPerson},()=>{
           });
         }
       );
@@ -402,6 +408,9 @@ class Packages extends React.Component {
             <DataTableComponent actionCol={8} columns={columns} data={this.state.blockList} actions={actionsList} />
         :
             <>
+            <Row style={{flexDirection:'row-reverse'}}>
+              <Button vairent="primary" className = "AddBtn" onClick={()=>{this.setState({showAdd: true})}}>Add</Button>
+            </Row>
             <hr/>
             <p style={{textAlign:'center'}}>No Record Found</p>
             </>
@@ -547,7 +556,7 @@ class Packages extends React.Component {
               
               <Form.Control as="select" name="selectedDelivaryPerson" value={this.state.selectedDelivaryPerson} onChange={this.handleChange}>
                 <option value="">Select Option</option>
-                {this.state.deliveryPersonList.map(deliveryPerson=>(
+                {this.state.allDeliveryPersonList.map(deliveryPerson=>(
                   <option value={deliveryPerson.id} key={deliveryPerson.id}>{deliveryPerson.name}</option>
                 ))}
               </Form.Control>
