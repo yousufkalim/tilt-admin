@@ -14,63 +14,62 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
 var routes = [
-  { 
+  {
     path: "/index",
     name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/user-profile",
     name: "Users",
     icon: "ni ni-single-02 text-yellow",
     component: Users,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/restaurants",
     name: "Restaurants",
-    icon: "ni ni-single-02 text-green",
+    icon: "ni ni-shop text-green",
     component: Restaurant,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/company",
     name: "Companies",
     icon: "ni ni-briefcase-24 text-blue",
     component: Companies,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/package",
     name: "Packages",
     icon: "ni ni-bag-17 text-pink",
     component: Packages,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/blocks",
     name: "Blocks",
     icon: " ni ni-app text-red",
     component: Blocks,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/delivery-person",
     name: "Delivery Person",
-    icon: "ni ni-single-02 text-red",
+    icon: "ni ni-delivery-fast text-red",
     component: DeliveryPerson,
-    layout: "/admin"
+    layout: "/admin",
   },
   {
     path: "/discounts",
     name: "Discounts",
     icon: "fas fa-hand-holding-usd text-black",
     component: Discounts,
-    layout: "/admin"
+    layout: "/admin",
   },
-  
 
   // {
   //   path: "/maps",
@@ -79,7 +78,7 @@ var routes = [
   //   component: Maps,
   //   layout: "/admin"
   // },
-  
+
   // {
   //   path: "/tables",
   //   name: "Tables",
@@ -92,7 +91,7 @@ var routes = [
     name: "Login",
     icon: "ni ni-key-25 text-info",
     component: Login,
-    layout: "/auth"
+    layout: "/auth",
   },
   // {
   //   path: "/register",

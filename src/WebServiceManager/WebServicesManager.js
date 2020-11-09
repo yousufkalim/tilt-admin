@@ -230,7 +230,7 @@ export default class WebServicesManager extends React.Component {
 
   //Get with parameters method with ID
   callGetWithParamMethod(baseURL, params, callback) {
-    // debugger
+    // //debugger;
     baseURL = baseURL + "/?id=" + params.dataToFetch;
     fetch(baseURL, {
       method: "Get",
@@ -248,7 +248,7 @@ export default class WebServicesManager extends React.Component {
       .catch((error) => {});
   }
   callGetApiForgotPassword(baseURL, params, callback) {
-    // debugger;
+    // //debugger;;
     let headeris = {
       "Content-Type": "application/json",
     };
@@ -340,7 +340,7 @@ export default class WebServicesManager extends React.Component {
   }
   //Get LogIn
   callGetLogIn(baseURL, params, callback) {
-    // debugger;
+    // //debugger;;
     let headeris = {
       "Content-Type": "application/json",
     };
@@ -354,7 +354,7 @@ export default class WebServicesManager extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // debugger;
+        // //debugger;;
         let statusCode = responseJson.code;
         callback(statusCode, responseJson);
       })
@@ -372,10 +372,37 @@ export default class WebServicesManager extends React.Component {
   //Get with parameters method with ID
   callPutMethod(baseURL, params, callback) {
     // var params2 = JSON.parse(params.dataToUpdate);
-    debugger;
     let headeris = {
       "Content-Type": "application/json",
     };
+    if (params.token !== undefined) {
+      headeris["Authorization"] = "Bearer " + params.token;
+    }
+    if (params.userID) {
+      baseURL = baseURL + "/" + params.userID;
+    }
+
+    // baseURL = baseURL;
+    fetch(baseURL, {
+      method: "PUT",
+      headers: headeris,
+      body: params.dataToUpdate,
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        let statusCode = responseJson.code;
+        callback(statusCode, responseJson);
+      })
+      .catch((error) => {});
+  }
+
+  putApi(params, callback) {
+    return this.callPutMethod(this.baseUrl + params.endPoint, params, callback);
+  }
+  //Get with parameters method with ID
+  callPutMethodForm(baseURL, params, callback) {
+    // var params2 = JSON.parse(params.dataToUpdate);
+    let headeris = {};
     if (params.token !== undefined) {
       headeris["Authorization"] = "Bearer " + params.token;
     }
@@ -397,8 +424,12 @@ export default class WebServicesManager extends React.Component {
       .catch((error) => {});
   }
 
-  putApi(params, callback) {
-    return this.callPutMethod(this.baseUrl + params.endPoint, params, callback);
+  putApiForm(params, callback) {
+    return this.callPutMethodForm(
+      this.baseUrl + params.endPoint,
+      params,
+      callback
+    );
   }
 
   //`delete` with parameters method with ID

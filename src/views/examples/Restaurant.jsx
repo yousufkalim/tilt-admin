@@ -27,9 +27,12 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "First Name" },
+  { title: "Name" },
   { title: "Email" },
-  { title: "Company" },
+  { title: "Address" },
+  { title: "Pickup Place" },
+  { title: "Block" },
+  { title: "# of Dishes" },
   { title: "Actions" },
 ];
 
@@ -75,6 +78,7 @@ class Restaurant extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
+        //debugger;;
         console.log(response);
         var RestaurantDatais = [];
         response.restaurants.map((item) => {
@@ -82,8 +86,13 @@ class Restaurant extends React.Component {
             RestaurantDatais.push([
               item.firstName,
               item.email,
+              `${item.address.street}, ${item.address.city}, ${item.address.zip}`,
+              item.restaurant.pickupPlace,
+              item.block !== undefined && item.block !== null
+                ? item.block.name
+                : "No Block Assigned",
               item.restaurant.dishes.length,
-              item._id,
+              item,
             ]);
           }
         });
@@ -95,13 +104,13 @@ class Restaurant extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
+    // //debugger;;
     const confirmis = window.confirm("Are you sure you want to delete?");
-
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
         {
-          endPoint: "Restaurant/delete",
-          dataToDelete: id,
+          endPoint: "restaurant/delete",
+          dataToDelete: id._id,
           token: localStorage.getItem("token"),
         },
         (statusCode, response) => {
@@ -116,62 +125,73 @@ class Restaurant extends React.Component {
     });
   };
 
-  handleUpdateRestaurant = (id) => {
-    debugger;
-    var tokn = localStorage.getItem("token");
-    this.WebServicesManager.getApiCall(
-      {
-        endPoint: "Restaurant/getbyid/" + id,
-        // dataToFetch:id,
-        token: tokn,
-      },
-      (statusCode, response) => {
-        debugger;
-        const { email, firstName, lastName } = response.Restaurant;
-        this.setState({
-          firstName,
-          lastName,
-          email,
-          currId: id,
-          updateRestaurant: true,
-        });
-      }
-    );
+  handleUpdateRestaurant = (item) => {
+    // this.WebServicesManager.getApiCall(
+    //   {
+    //     endPoint: "restaurant/getbyid/" + id,
+    //     // dataToFetch:id,
+    //     token: tokn,
+    //   },
+    //   (statusCode, response) => {
+    //     //debugger;;
+    const { _id, firstName, email, password, address, restaurant } = item;
+    //debugger;;
+    this.setState({
+      name: firstName,
+      password,
+      email,
+      street: address.street,
+      city: address.city,
+      zip: address.zip,
+      imagePath: null,
+      pickupPlace: restaurant.pickupPlace,
+      currId: _id,
+      updateRestaurant: true,
+    });
+    //   }
+    // );
   };
 
   handleAdd = () => {
-    debugger;
-    const {
-      name,
-      email,
-      password,
-      street,
-      zip,
-      city,
-      imagePath,
-      pickupPlace,
-    } = this.state;
-    const formdata = new FormData();
-    formdata.append("name", name);
-    formdata.append("email", email);
-    formdata.append("password", password);
-    formdata.append("address", JSON.stringify({ street, zip, city }));
-    formdata.append("pickupPlace", pickupPlace);
-    formdata.append("image", imagePath);
-    this.WebServicesManager.postApiCallFormData(
-      {
-        endPoint: "restaurant",
-        dataToInsert: formdata,
-        token: localStorage.getItem("token"),
-      },
-      (statusCode, responseAdd) => {
-        debugger;
-        console.log("added");
-        this.handleClose();
-        this.handleResetState();
-        this.handleLoadData();
-      }
-    );
+    // //debugger;;
+    this.setState({ setBtnDisable: true }, () => {
+      const {
+        name,
+        email,
+        password,
+        street,
+        zip,
+        city,
+        imagePath,
+        pickupPlace,
+      } = this.state;
+      const formdata = new FormData();
+      formdata.append("name", name);
+      formdata.append("email", email);
+      formdata.append("password", password);
+      formdata.append("address", JSON.stringify({ street, zip, city }));
+      formdata.append("pickupPlace", pickupPlace);
+      formdata.append("image", imagePath);
+      this.WebServicesManager.postApiCallFormData(
+        {
+          endPoint: "restaurant",
+          dataToInsert: formdata,
+          token: localStorage.getItem("token"),
+        },
+        (statusCode, responseAdd) => {
+          // //debugger;;
+          if (responseAdd.message) {
+            this.setState({ setBtnDisable: false }, () => {
+              window.alert(responseAdd.message);
+            });
+          } else {
+            this.handleClose();
+            this.handleResetState();
+            this.handleLoadData();
+          }
+        }
+      );
+    });
   };
 
   handleResetState = () => {
@@ -190,26 +210,47 @@ class Restaurant extends React.Component {
   };
 
   handleUpdateSubmit = () => {
-    const { currId, firstName, lastName, email } = this.state;
-    const info = {
-      firstName,
-      lastName,
+    //debugger;;
+    const {
+      name,
       email,
-    };
-
-    const dataToUpdate = JSON.stringify(info);
-    this.WebServicesManager.putApi(
-      {
-        endPoint: "Restaurant/edit",
-        RestaurantID: currId,
-        dataToUpdate: dataToUpdate,
-        token: localStorage.getItem("token"),
-      },
-      (statusCode, responseUpdate) => {
-        this.handleResetState();
-        this.handleLoadData();
-      }
-    );
+      password,
+      street,
+      zip,
+      city,
+      imagePath,
+      pickupPlace,
+      currId,
+    } = this.state;
+    const formdata = new FormData();
+    formdata.append("name", name);
+    formdata.append("email", email);
+    // formdata.append("password", password);
+    formdata.append("address", JSON.stringify({ street, zip, city }));
+    formdata.append("pickupPlace", pickupPlace);
+    if (imagePath !== null) {
+      formdata.append("image", imagePath);
+    }
+    this.setState({ setBtnDisable: true }, () => {
+      this.WebServicesManager.putApiForm(
+        {
+          endPoint: "restaurant/edit",
+          RestaurantID: currId,
+          dataToUpdate: formdata,
+          token: localStorage.getItem("token"),
+        },
+        (statusCode, responseUpdate) => {
+          if (responseUpdate.message) {
+            this.setState({ setBtnDisable: false }, () => {
+              window.alert(responseUpdate.message);
+            });
+          } else {
+            this.handleResetState();
+            this.handleLoadData();
+          }
+        }
+      );
+    });
   };
 
   handleBtnDisable = () => {
@@ -249,10 +290,11 @@ class Restaurant extends React.Component {
           <>
             {this.state.RestaurantList.length > 0 ? (
               <DataTableComponent
-                actionCol={3}
+                actionCol={6}
                 columns={columns}
                 data={this.state.RestaurantList}
                 actions={actionsList}
+                hideEdit={true}
               />
             ) : (
               <>
@@ -365,7 +407,11 @@ class Restaurant extends React.Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleAdd}>
+            <Button
+              variant="primary"
+              disabled={this.state.setBtnDisable}
+              onClick={this.handleAdd}
+            >
               Save Changes
             </Button>
           </Modal.Footer>
@@ -381,23 +427,12 @@ class Restaurant extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                name="firstName"
-                placeholder="Enter First Name"
-                value={this.state.firstName}
-                onChange={this.handleChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                placeholder="Enter Last Name"
-                value={this.state.lastName}
+                name="name"
+                placeholder="Enter Restaurant Name"
+                value={this.state.name}
                 onChange={this.handleChange}
               />
             </Form.Group>
@@ -409,8 +444,69 @@ class Restaurant extends React.Component {
                 name="email"
                 placeholder="Enter email"
                 value={this.state.email}
-                disabled
+                disabled={true}
                 onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail" style={{ display: "none" }}>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                value={this.state.password}
+                disabled={true}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Label>Address</Form.Label>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Street</Form.Label>
+              <Form.Control
+                type="text"
+                name="street"
+                placeholder="rue 51"
+                value={this.state.street}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                type="text"
+                name="city"
+                placeholder="paris"
+                value={this.state.city}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>ZipCode</Form.Label>
+              <Form.Control
+                type="text"
+                name="zip"
+                placeholder="11211"
+                value={this.state.zip}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Pickup Place</Form.Label>
+              <Form.Control
+                type="text"
+                name="pickupPlace"
+                placeholder="42 rue joe *****"
+                value={this.state.pickupPlace}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                name="image"
+                onChange={this.handleImageUpload}
               />
             </Form.Group>
           </Modal.Body>

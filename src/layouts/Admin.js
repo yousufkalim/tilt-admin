@@ -33,14 +33,14 @@ class Admin extends React.Component {
     this.refs.mainContent.scrollTop = 0;
   }
 
-  componentWillMount(){
-    const user = localStorage.getItem('token');
-    debugger;
-    if(!user){
-      window.location.replace('/auth/login');
+  componentWillMount() {
+    const user = localStorage.getItem("token");
+    // //debugger;;
+    if (!user) {
+      window.location.replace("/auth/login");
     }
   }
-  getRoutes = routes => {
+  getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
@@ -55,7 +55,7 @@ class Admin extends React.Component {
       }
     });
   };
-  getBrandText = path => {
+  getBrandText = (path) => {
     for (let i = 0; i < routes.length; i++) {
       if (
         this.props.location.pathname.indexOf(
@@ -76,20 +76,19 @@ class Admin extends React.Component {
           logo={{
             innerLink: "/admin/index",
             imgSrc: require("assets/img/brand/argon-react.png"),
-            imgAlt: "..."
+            imgAlt: "...",
           }}
         />
         <div className="main-content" ref="mainContent">
           <AdminNavbar
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
-            
           />
           <Switch>
             {this.getRoutes(routes)}
             <Redirect from="*" to="/admin/index" />
           </Switch>
-            <Container fluid>
+          <Container fluid>
             <AdminFooter />
           </Container>
         </div>
