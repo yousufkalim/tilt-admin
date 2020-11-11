@@ -273,7 +273,7 @@ class DeliveryPerson extends React.Component {
         {/* // ADD User  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Restaurant</Modal.Title>
+            <Modal.Title>Add Delivery Person</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">

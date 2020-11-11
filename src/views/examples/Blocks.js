@@ -454,7 +454,7 @@ class Packages extends React.Component {
       deliveryCost,
       selectedCompany,
       selectedRestaurant,
-      selectedDelivaryPerson,
+      // selectedDelivaryPerson,
     } = this.state;
     if (
       name !== "" &&
@@ -463,8 +463,8 @@ class Packages extends React.Component {
       deliveryTime !== "" &&
       deliveryCost !== "" &&
       selectedCompany !== "" &&
-      selectedRestaurant !== "" &&
-      selectedDelivaryPerson !== ""
+      selectedRestaurant !== ""
+      // selectedDelivaryPerson !== ""
     ) {
       this.setState({
         setBtnDisable: false,
