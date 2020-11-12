@@ -268,7 +268,7 @@ class Company extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -279,7 +279,7 @@ class Company extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Place</Form.Label>
+              <Form.Label>Delivery Place<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"
@@ -310,7 +310,7 @@ class Company extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -321,7 +321,7 @@ class Company extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Place</Form.Label>
+              <Form.Label>Delivery Place<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"

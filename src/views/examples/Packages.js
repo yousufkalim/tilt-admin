@@ -293,7 +293,7 @@ class Packages extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -304,7 +304,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Price</Form.Label>
+              <Form.Label>Price<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="Number"
                 name="price"
@@ -315,7 +315,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Off Price</Form.Label>
+              <Form.Label>Off Price<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="offPrice"
@@ -326,7 +326,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Credits</Form.Label>
+              <Form.Label>Credits<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="credits"
@@ -337,7 +337,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Expiration</Form.Label>
+              <Form.Label>Expiration<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="expiration"
@@ -368,7 +368,7 @@ class Packages extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -379,7 +379,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Price</Form.Label>
+              <Form.Label>Price<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="Number"
                 name="price"
@@ -390,7 +390,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Off Price</Form.Label>
+              <Form.Label>Off Price<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="offPrice"
@@ -401,7 +401,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Credits</Form.Label>
+              <Form.Label>Credits<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="credits"
@@ -412,7 +412,7 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Expiration</Form.Label>
+              <Form.Label>Expiration<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
                 type="number"
                 name="expiration"
