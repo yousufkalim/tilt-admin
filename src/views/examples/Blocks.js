@@ -87,7 +87,7 @@ class Packages extends React.Component {
     const tokn = localStorage.getItem("token");
     let companyListFilter = [];
     let restaurantsListFilter = [];
-    let deliveryPersonListFilter = [];
+    
     this.WebServicesManager.getApiCall(
       {
         endPoint: "admin/company",
@@ -127,8 +127,15 @@ class Packages extends React.Component {
         this.setState({ resturantList: restaurantsListFilter }, () => {});
       }
     );
+
+    this.handleLoadDelivaryPerson(tokn);
+    
+  };
+
+  handleLoadDelivaryPerson = (tokn) => {
     // get all delivery persons
     let allDevPerson = [];
+    let deliveryPersonListFilter = [];
     this.WebServicesManager.getApiCall(
       {
         endPoint: "deliveryuser/",
@@ -137,7 +144,6 @@ class Packages extends React.Component {
       (statusCode, response) => {
         console.log(response);
         response.users.map((item) => {
-          debugger;
           console.log(
             item.block === null , item.block === undefined ,
           (item.block === undefined,
@@ -151,8 +157,8 @@ class Packages extends React.Component {
               name: item.firstName,
             });
           }
-          debugger;
-          if (item.status !== "deleted") {
+          if ((item.block === null || item.block === undefined || item.block._id === this.state.currId) &&
+          (item.status !== "deleted" )) {
             allDevPerson.push({
               id: item._id,
               name: item.firstName,
@@ -168,7 +174,7 @@ class Packages extends React.Component {
         );
       }
     );
-  };
+  }
 
   handleAdd = () => {
     this.setState({ setBtnDisable: true }, () => {
@@ -328,6 +334,7 @@ class Packages extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
+        console.log(response)
         //////debugger;;
         const {
           name,
@@ -341,7 +348,7 @@ class Packages extends React.Component {
         } = response.block;
         let a = [];
         let b = [];
-
+        debugger;
         if (restaurants.length > 0) {
           restaurants.map((ite) => {
             ite !== null &&
@@ -354,6 +361,9 @@ class Packages extends React.Component {
             ite !== null && a.push({ value: ite._id, label: ite.name });
           });
         }
+        this.setState({ currId: id},()=>{
+          this.handleLoadDelivaryPerson(tokn);
+        });
         this.setState(
           {
             name,
@@ -367,7 +377,7 @@ class Packages extends React.Component {
               deliveryPerson !== undefined && deliveryPerson !== null
                 ? deliveryPerson._id
                 : "",
-            currId: id,
+           
             updateBlock: true,
           },
           () => {
