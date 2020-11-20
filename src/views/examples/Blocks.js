@@ -142,12 +142,7 @@ class Packages extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log(response);
         response.users.map((item) => {
-          console.log(
-            item.block === null , item.block === undefined ,
-          (item.block === undefined,
-          item.status !== "deleted"));
           if (
             (item.block === null || item.block === undefined) &&
             (item.status !== "deleted")
@@ -334,7 +329,7 @@ class Packages extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log(response)
+        console.log("New Response",response)
         //////debugger;;
         const {
           name,
@@ -348,7 +343,12 @@ class Packages extends React.Component {
         } = response.block;
         let a = [];
         let b = [];
-        debugger;
+        
+        let orderTime = timeForOrder.split("h").join(":").split("m").join("");
+        let timeforDelivery = deliveryTime.split("h").join(":").split("m").join("");
+        let timeForPick = pickUpTime.split("h").join(":").split("m").join("");
+
+
         if (restaurants.length > 0) {
           restaurants.map((ite) => {
             ite !== null &&
@@ -367,9 +367,9 @@ class Packages extends React.Component {
         this.setState(
           {
             name,
-            timeForOrder,
-            pickUpTime,
-            deliveryTime,
+            timeForOrder : orderTime,
+            pickUpTime : timeForPick,
+            deliveryTime : timeforDelivery,
             deliveryCost,
             selectedRestaurant: b,
             selectedCompany: a,
@@ -552,7 +552,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Order Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="timeForOrder"
                 placeholder="Enter Order Time"
                 value={this.state.timeForOrder}
@@ -563,7 +563,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>PickUp Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="pickUpTime"
                 placeholder="Enter Pick up Time"
                 value={this.state.pickUpTime}
@@ -574,7 +574,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Delivery Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="deliveryTime"
                 placeholder="Enter Delivery Time"
                 value={this.state.deliveryTime}
@@ -670,7 +670,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Order Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="timeForOrder"
                 placeholder="Enter Order Time"
                 value={this.state.timeForOrder}
@@ -681,7 +681,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>PickUp Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="pickUpTime"
                 placeholder="Enter Pick up Time"
                 value={this.state.pickUpTime}
@@ -692,7 +692,7 @@ class Packages extends React.Component {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Delivery Time<span style={{color:'red'}}>*</span></Form.Label>
               <Form.Control
-                type="text"
+                type="time"
                 name="deliveryTime"
                 placeholder="Enter Delivery Time"
                 value={this.state.deliveryTime}
