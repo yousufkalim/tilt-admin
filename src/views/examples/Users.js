@@ -71,20 +71,21 @@ class Users extends React.Component {
       },
       (statusCode, response) => {
         console.log(response);
-        var userDatais = [];
-        response.users.map((item) => {
+        var userDetails = [];
+        response.users.map(item => {
+          console.log("hey",item.user.company);
           if (item.status !== "deleted") {
-            userDatais.push([
+            userDetails.push([
               item.firstName,
               item.lastName,
-              item.user.company !== undefined
+              item.user.company !== undefined && item.user.company !== null
                 ? item.user.company.name
                 : "No company",
               item._id,
             ]);
           }
         });
-        this.setState({ userList: userDatais }, () => {
+        this.setState({ userList: userDetails }, () => {
           // console.log('response state',this.state.userList);
         });
       }
