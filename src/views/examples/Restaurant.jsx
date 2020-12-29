@@ -169,7 +169,6 @@ class Restaurant extends React.Component {
       formdata.append("name", name);
       formdata.append("email", email);
       formdata.append("password", password);
-      zip = String(zip);
       formdata.append("address", JSON.stringify({ street, zip, city }));
       formdata.append("pickupPlace", pickupPlace);
       formdata.append("image", imagePath);
@@ -255,9 +254,27 @@ class Restaurant extends React.Component {
   };
 
   handleBtnDisable = () => {
-    const { name, email, password,street,zip,city,imagePath, pickupPlace } = this.state;
+    const {
+      name,
+      email,
+      password,
+      street,
+      zip,
+      city,
+      imagePath,
+      pickupPlace,
+    } = this.state;
     debugger;
-    if (name && email && password && street && zip && city && imagePath && pickupPlace) {
+    if (
+      name &&
+      email &&
+      password &&
+      street &&
+      zip &&
+      city &&
+      imagePath &&
+      pickupPlace
+    ) {
       this.setState({
         setBtnDisable: false,
       });
@@ -325,7 +342,9 @@ class Restaurant extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Name<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -336,7 +355,9 @@ class Restaurant extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Email<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="email"
                 name="email"
@@ -346,7 +367,9 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Password<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Password<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="password"
                 name="password"
@@ -358,7 +381,9 @@ class Restaurant extends React.Component {
 
             <Form.Label>Address</Form.Label>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Street<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Street<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="street"
@@ -368,7 +393,9 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>City<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                City<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="city"
@@ -378,17 +405,21 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>ZipCode<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                ZipCode<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 name="zip"
                 placeholder="11211"
-                value={parseInt(this.state.zip)}
+                value={this.state.zip}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Pickup Place<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Pickup Place<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="pickupPlace"
@@ -398,7 +429,9 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Image<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Image<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="file"
                 name="image"
