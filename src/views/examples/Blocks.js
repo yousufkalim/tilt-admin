@@ -28,6 +28,7 @@ import {
 } from "reactstrap";
 // core components
 import CustomHeader from "components/Headers/CustomHeader.js";
+import moment from "moment";
 const animatedComponents = makeAnimated();
 
 const columns = [
@@ -87,7 +88,7 @@ class Packages extends React.Component {
     const tokn = localStorage.getItem("token");
     let companyListFilter = [];
     let restaurantsListFilter = [];
-    
+
     this.WebServicesManager.getApiCall(
       {
         endPoint: "admin/company",
@@ -129,7 +130,6 @@ class Packages extends React.Component {
     );
 
     this.handleLoadDelivaryPerson(tokn);
-    
   };
 
   handleLoadDelivaryPerson = (tokn) => {
@@ -145,15 +145,19 @@ class Packages extends React.Component {
         response.users.map((item) => {
           if (
             (item.block === null || item.block === undefined) &&
-            (item.status !== "deleted")
+            item.status !== "deleted"
           ) {
             deliveryPersonListFilter.push({
               id: item._id,
               name: item.firstName,
             });
           }
-          if ((item.block === null || item.block === undefined || item.block._id === this.state.currId) &&
-          (item.status !== "deleted" )) {
+          if (
+            (item.block === null ||
+              item.block === undefined ||
+              item.block._id === this.state.currId) &&
+            item.status !== "deleted"
+          ) {
             allDevPerson.push({
               id: item._id,
               name: item.firstName,
@@ -169,7 +173,7 @@ class Packages extends React.Component {
         );
       }
     );
-  }
+  };
 
   handleAdd = () => {
     this.setState({ setBtnDisable: true }, () => {
@@ -329,7 +333,7 @@ class Packages extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log("New Response",response)
+        console.log("New Response", response);
         //////debugger;;
         const {
           name,
@@ -343,11 +347,14 @@ class Packages extends React.Component {
         } = response.block;
         let a = [];
         let b = [];
-        
-        let orderTime = timeForOrder.split("h").join(":").split("m").join("");
-        let timeforDelivery = deliveryTime.split("h").join(":").split("m").join("");
-        let timeForPick = pickUpTime.split("h").join(":").split("m").join("");
 
+        let orderTime = timeForOrder.split("h").join(":").split("m").join("");
+        let timeforDelivery = deliveryTime
+          .split("h")
+          .join(":")
+          .split("m")
+          .join("");
+        let timeForPick = pickUpTime.split("h").join(":").split("m").join("");
 
         if (restaurants.length > 0) {
           restaurants.map((ite) => {
@@ -361,15 +368,15 @@ class Packages extends React.Component {
             ite !== null && a.push({ value: ite._id, label: ite.name });
           });
         }
-        this.setState({ currId: id},()=>{
+        this.setState({ currId: id }, () => {
           this.handleLoadDelivaryPerson(tokn);
         });
         this.setState(
           {
             name,
-            timeForOrder : orderTime,
-            pickUpTime : timeForPick,
-            deliveryTime : timeforDelivery,
+            timeForOrder: orderTime,
+            pickUpTime: timeForPick,
+            deliveryTime: timeforDelivery,
             deliveryCost,
             selectedRestaurant: b,
             selectedCompany: a,
@@ -377,7 +384,7 @@ class Packages extends React.Component {
               deliveryPerson !== undefined && deliveryPerson !== null
                 ? deliveryPerson._id
                 : "",
-           
+
             updateBlock: true,
           },
           () => {
@@ -407,6 +414,35 @@ class Packages extends React.Component {
     );
   };
   handleUpdateSubmit = () => {
+    var orderTimeFormatted = moment(this.state.timeForOrder, "h:mma");
+    var deliveryTimeFormatted = moment(this.state.deliveryTime, "h:mma");
+    var pickupTimeFormatted = moment(this.state.pickUpTime, "h:mma");
+
+    if (deliveryTimeFormatted.isBefore(orderTimeFormatted)) {
+      alert("Delivey Time Needs To Set After Order Time");
+      return;
+    }
+    if (pickupTimeFormatted.isBefore(orderTimeFormatted)) {
+      alert("Pickup Time Needs To Set After Order Time");
+      return;
+    }
+
+    if (pickupTimeFormatted.isAfter(deliveryTimeFormatted)) {
+      alert("Pickup Time Needs To Be Before Delivery Time");
+      return;
+    }
+    if (this.state.deliveryTime == this.state.pickUpTime) {
+      alert("Delivery And Pickup Times Cannot Be Same");
+      return;
+    }
+    if (this.state.timeForOrder == this.state.deliveryTime) {
+      alert("Delivery And Order Times Cannot Be Same");
+      return;
+    }
+    if (this.state.timeForOrder == this.state.pickUpTime) {
+      alert("Pickup And Order Times Cannot Be Same");
+      return;
+    }
     const {
       currId,
       name,
@@ -539,7 +575,9 @@ class Packages extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Name<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -550,7 +588,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Order Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Order Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="timeForOrder"
@@ -561,7 +601,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>PickUp Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                PickUp Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="pickUpTime"
@@ -572,7 +614,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="deliveryTime"
@@ -583,7 +627,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Cost<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Cost<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="deliveryCost"
@@ -595,7 +641,9 @@ class Packages extends React.Component {
 
             <Form.Group controlId="exampleForm.ControlSelect1">
               {/* Company */}
-              <Form.Label>Company List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Company List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -608,7 +656,9 @@ class Packages extends React.Component {
 
             {/* Restaurant */}
             <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Restaurant List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Restaurant List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -620,7 +670,9 @@ class Packages extends React.Component {
               {/* delivary Person */}
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Delivary Persons List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivary Persons List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 as="select"
                 name="selectedDelivaryPerson"
@@ -657,7 +709,9 @@ class Packages extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Name<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -668,7 +722,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Order Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Order Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="timeForOrder"
@@ -679,7 +735,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>PickUp Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                PickUp Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="pickUpTime"
@@ -690,7 +748,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Time<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Time<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="time"
                 name="deliveryTime"
@@ -701,7 +761,9 @@ class Packages extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Cost<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Cost<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="deliveryCost"
@@ -713,7 +775,9 @@ class Packages extends React.Component {
 
             <Form.Group controlId="exampleForm.ControlSelect1">
               {/* Company */}
-              <Form.Label>Company List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Company List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -726,7 +790,9 @@ class Packages extends React.Component {
 
             {/* Restaurant */}
             <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Restaurant List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Restaurant List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -738,7 +804,9 @@ class Packages extends React.Component {
               {/* delivary Person */}
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
-              <Form.Label>Delivary Persons List<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivary Persons List<span style={{ color: "red" }}>*</span>
+              </Form.Label>
 
               <Form.Control
                 as="select"
