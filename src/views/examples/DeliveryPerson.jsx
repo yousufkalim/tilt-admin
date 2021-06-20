@@ -58,6 +58,7 @@ class DeliveryPerson extends React.Component {
   };
   handleUpdateClose = () => {
     this.setState({ updateUser: false });
+    this.handleResetState();
   };
   componentDidMount() {
     this.handleLoadData();

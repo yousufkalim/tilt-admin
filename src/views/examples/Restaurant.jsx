@@ -49,6 +49,7 @@ class Restaurant extends React.Component {
       setBtnDisable: false,
       name: "",
       email: "",
+      phone: "",
       password: "",
       street: "",
       zip: "",
@@ -64,6 +65,7 @@ class Restaurant extends React.Component {
   };
   handleUpdateClose = () => {
     this.setState({ updateRestaurant: false });
+    this.handleResetState();
   };
   componentDidMount() {
     this.handleLoadData();
@@ -86,6 +88,7 @@ class Restaurant extends React.Component {
             RestaurantDatais.push([
               item.firstName,
               item.email,
+              item.phone,
               `${item.address.street}, ${item.address.city}, ${item.address.zip}`,
               item.restaurant.pickupPlace,
               item.block !== undefined && item.block !== null
@@ -126,6 +129,7 @@ class Restaurant extends React.Component {
   };
 
   handleUpdateRestaurant = (item) => {
+    console.log(item);
     // this.WebServicesManager.getApiCall(
     //   {
     //     endPoint: "restaurant/getbyid/" + id,
@@ -134,12 +138,13 @@ class Restaurant extends React.Component {
     //   },
     //   (statusCode, response) => {
     //     //debugger;;
-    const { _id, firstName, email, password, address, restaurant } = item;
+    const { _id, firstName, email, phone, password, address, restaurant } = item;
     //debugger;;
     this.setState({
       name: firstName,
       password,
       email,
+      phone,
       street: address.street,
       city: address.city,
       zip: address.zip,
@@ -158,6 +163,7 @@ class Restaurant extends React.Component {
       const {
         name,
         email,
+        phone,
         password,
         street,
         zip,
@@ -165,32 +171,37 @@ class Restaurant extends React.Component {
         imagePath,
         pickupPlace,
       } = this.state;
+
+      console.log(this.state)
       const formdata = new FormData();
       formdata.append("name", name);
       formdata.append("email", email);
+      formdata.append("phone", phone);
       formdata.append("password", password);
       formdata.append("address", JSON.stringify({ street, zip, city }));
       formdata.append("pickupPlace", pickupPlace);
       formdata.append("image", imagePath);
-      this.WebServicesManager.postApiCallFormData(
-        {
-          endPoint: "restaurant",
-          dataToInsert: formdata,
-          token: localStorage.getItem("token"),
-        },
-        (statusCode, responseAdd) => {
-          // //debugger;;
-          if (responseAdd.message) {
-            this.setState({ setBtnDisable: false }, () => {
-              window.alert(responseAdd.message);
-            });
-          } else {
-            this.handleClose();
-            this.handleResetState();
-            this.handleLoadData();
-          }
-        }
-      );
+
+      console.log("formdata ", formdata);
+      // this.WebServicesManager.postApiCallFormData(
+      //   {
+      //     endPoint: "restaurant",
+      //     dataToInsert: formdata,
+      //     token: localStorage.getItem("token"),
+      //   },
+      //   (statusCode, responseAdd) => {
+      //     // //debugger;;
+      //     if (responseAdd.message) {
+      //       this.setState({ setBtnDisable: false }, () => {
+      //         window.alert(responseAdd.message);
+      //       });
+      //     } else {
+      //       this.handleClose();
+      //       this.handleResetState();
+      //       this.handleLoadData();
+      //     }
+      //   }
+      // );
     });
   };
 
@@ -199,6 +210,7 @@ class Restaurant extends React.Component {
       name: "",
       email: "",
       password: "",
+      phone: "",
       street: "",
       zip: "",
       city: "",
@@ -214,6 +226,7 @@ class Restaurant extends React.Component {
     const {
       name,
       email,
+      phone,
       password,
       street,
       zip,
@@ -222,9 +235,11 @@ class Restaurant extends React.Component {
       pickupPlace,
       currId,
     } = this.state;
+    console.log(currId);
     const formdata = new FormData();
     formdata.append("name", name);
     formdata.append("email", email);
+    formdata.append("phone", phone);
     // formdata.append("password", password);
     formdata.append("address", JSON.stringify({ street, zip, city }));
     formdata.append("pickupPlace", pickupPlace);
@@ -234,15 +249,14 @@ class Restaurant extends React.Component {
     this.setState({ setBtnDisable: true }, () => {
       this.WebServicesManager.putApiForm(
         {
-          endPoint: "restaurant/edit",
-          RestaurantID: currId,
+          endPoint: "restaurant/edit/" + currId,
           dataToUpdate: formdata,
           token: localStorage.getItem("token"),
         },
         (statusCode, responseUpdate) => {
           if (responseUpdate.message) {
             this.setState({ setBtnDisable: false }, () => {
-              window.alert(responseUpdate.message);
+              // window.alert(responseUpdate.message);
             });
           } else {
             this.handleResetState();
@@ -257,6 +271,7 @@ class Restaurant extends React.Component {
     const {
       name,
       email,
+      phone,
       password,
       street,
       zip,
@@ -264,10 +279,11 @@ class Restaurant extends React.Component {
       imagePath,
       pickupPlace,
     } = this.state;
-    debugger;
+    // debugger;
     if (
       name &&
       email &&
+      phone &&
       password &&
       street &&
       zip &&
@@ -310,11 +326,11 @@ class Restaurant extends React.Component {
           <>
             {this.state.RestaurantList.length > 0 ? (
               <DataTableComponent
-                actionCol={6}
+                actionCol={7}
                 columns={columns}
                 data={this.state.RestaurantList}
                 actions={actionsList}
-                hideEdit={true}
+                hideEdit={false}
               />
             ) : (
               <>
@@ -361,8 +377,20 @@ class Restaurant extends React.Component {
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder="Enter Email"
                 value={this.state.email}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Contact Number<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                name="phone"
+                placeholder="Enter contact number"
+                value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
@@ -481,6 +509,18 @@ class Restaurant extends React.Component {
                 placeholder="Enter email"
                 value={this.state.email}
                 disabled={true}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Contact Number
+              </Form.Label>
+              <Form.Control
+                type="number"
+                name="phone"
+                placeholder="Enter contact number"
+                value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>

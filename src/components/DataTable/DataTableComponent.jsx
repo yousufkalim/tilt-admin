@@ -14,6 +14,8 @@ export default class DataTableComponent extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
+
     this.$el = $(this.el);
     if (this.props.is_order !== true) {
       this.$el.DataTable({

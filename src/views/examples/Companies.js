@@ -33,6 +33,33 @@ const columns = [
   { title: "Actions" },
 ];
 
+const cities = [
+  {
+    name: "Select City",
+    value: ""
+  },
+  {
+    name: "1",
+    value: "one"
+  },
+  {
+    name: "2",
+    value: "two"
+  },
+  {
+    name: "3",
+    value: "three"
+  },
+  {
+    name: "4",
+    value: "four"
+  },
+  {
+    name: "5",
+    value: "five"
+  },
+]
+
 class Company extends React.Component {
   WebServicesManager = new WebServicesManager();
   constructor(props) {
@@ -46,6 +73,8 @@ class Company extends React.Component {
       didUpdate: false,
       name: "",
       deliveryPlace: "",
+      street: "",
+      city: "",
       currId: "",
     };
   }
@@ -66,10 +95,11 @@ class Company extends React.Component {
   handleAdd = () => {
     this.setState({ setBtnDisable: true }, () => {
       //debugger;;
-      const { name, deliveryPlace } = this.state;
+      const { name, deliveryPlace, street } = this.state;
       const info = {
         name,
         deliveryPlace,
+        street,
       };
       const dataToUpdate = JSON.stringify(info);
       this.WebServicesManager.postApiCall(
@@ -110,6 +140,7 @@ class Company extends React.Component {
             companyDetails.push([
               item.name,
               item.deliveryPlace,
+              item.street,
               item.block !== null && item.block !== undefined
                 ? item.block.name
                 : "No Block Assigned",
@@ -141,6 +172,7 @@ class Company extends React.Component {
     }
   };
   handleChange = (e) => {
+    console.log(e.target.value);
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.handleBtnDisable();
     });
@@ -148,7 +180,9 @@ class Company extends React.Component {
 
   handleUpdateCompany = (id) => {
     // //debugger;
+  
     var tokn = localStorage.getItem("token");
+    console.log(id);
     this.WebServicesManager.getApiCall(
       {
         endPoint: "admin/company/get/" + id,
@@ -157,9 +191,17 @@ class Company extends React.Component {
       },
       (statusCode, response) => {
         // //debugger;;
-        const { name, deliveryPlace, block } = response.company;
+        const { name, deliveryPlace, street, city, block } = response.company;
         this.setState(
-          { name, deliveryPlace, block, currId: id, updateCompany: true },
+          {
+            name,
+            deliveryPlace,
+            street,
+            city,
+            block,
+            currId: id,
+            updateCompany: true,
+          },
           () => {
             this.handleBtnDisable();
           }
@@ -172,14 +214,18 @@ class Company extends React.Component {
     this.setState({
       name: "",
       deliveryPlace: "",
+      street: "",
+      city: "",
       showAdd: false,
     });
   };
   handleUpdateSubmit = () => {
-    const { name, currId, deliveryPlace, block } = this.state;
+    const { name, currId, deliveryPlace, street, city, block } = this.state;
     const info = {
       name,
       deliveryPlace,
+      street,
+      city,
       block,
     };
 
@@ -208,8 +254,8 @@ class Company extends React.Component {
   };
 
   handleBtnDisable = () => {
-    const { name, deliveryPlace } = this.state;
-    if (name !== "" && deliveryPlace !== "") {
+    const { name, deliveryPlace, street, city } = this.state;
+    if (name !== "" && deliveryPlace !== "" && street !== "" && city !== "") {
       this.setState({
         setBtnDisable: false,
       });
@@ -220,6 +266,7 @@ class Company extends React.Component {
     }
   };
   render() {
+    
     const actionsList = {
       addAction: () => {
         this.setState({ showAdd: true });
@@ -227,6 +274,8 @@ class Company extends React.Component {
       updateAction: (id) => this.handleUpdateCompany(id),
       deleteAction: (id) => this.handleDelete(id),
     };
+
+    console.log(actionsList);
 
     return (
       <>
@@ -237,7 +286,7 @@ class Company extends React.Component {
           <>
             {this.state.companyList.length > 0 ? (
               <DataTableComponent
-                actionCol={3}
+                actionCol={4}
                 columns={columns}
                 data={this.state.companyList}
                 actions={actionsList}
@@ -268,7 +317,9 @@ class Company extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Name<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -279,7 +330,9 @@ class Company extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Place<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Place<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"
@@ -287,6 +340,33 @@ class Company extends React.Component {
                 value={this.state.deliveryPlace}
                 onChange={this.handleChange}
               />
+            </Form.Group>
+
+            <Form.Label>Address</Form.Label>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Street<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="street"
+                placeholder="rue 51"
+                value={this.state.street}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>
+                City<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control as="select" value={this.state.city} name="city" onChange={this.handleChange}>
+              {
+                cities.map((item,index) => (
+                <option value={item.value}>{item.name}</option>
+                ))
+              }
+              </Form.Control>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
@@ -310,7 +390,9 @@ class Company extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Name<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -321,7 +403,9 @@ class Company extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Delivery Place<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                Delivery Place<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"
@@ -329,6 +413,33 @@ class Company extends React.Component {
                 value={this.state.deliveryPlace}
                 onChange={this.handleChange}
               />
+            </Form.Group>
+
+            <Form.Label>Address</Form.Label>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Street<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="street"
+                placeholder="rue 51"
+                value={this.state.street}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>
+                City<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control as="select" value={this.state.city} name="city" onChange={this.handleChange}>
+              {
+                cities.map((item,index) => (
+                <option value={item.value}>{item.name}</option>
+                ))
+              }
+              </Form.Control>
             </Form.Group>
 
             {/* <Form.Group controlId="formBasicEmail">
