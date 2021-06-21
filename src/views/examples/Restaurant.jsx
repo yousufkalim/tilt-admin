@@ -309,6 +309,7 @@ class Restaurant extends React.Component {
   };
 
   render() {
+    console.log(this.state.RestaurantList,"this.state.RestaurantList")
     const actionsList = {
       addAction: () => {
         this.setState({ showAdd: true });
