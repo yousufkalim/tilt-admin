@@ -420,7 +420,12 @@ export default class WebServicesManager extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         let statusCode = responseJson.code;
-        callback(statusCode, responseJson.data);
+        if (params.restaurantUpdate) {
+          console.log("Called object");
+          callback(statusCode, responseJson);
+        } else {
+          callback(statusCode, responseJson.data);
+        }
       })
       .catch((error) => {});
   }

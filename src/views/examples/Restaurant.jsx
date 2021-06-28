@@ -237,6 +237,7 @@ class Restaurant extends React.Component {
           endPoint: "restaurant/editByAdmin/" + currId,
           dataToUpdate: formdata,
           token: localStorage.getItem("token"),
+          restaurantUpdate: true,
         },
         (statusCode, responseUpdate) => {
           if (responseUpdate.message) {
