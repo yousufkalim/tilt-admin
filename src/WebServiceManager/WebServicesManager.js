@@ -1,8 +1,8 @@
 import React from "react";
 
 export default class WebServicesManager extends React.Component {
-  baseUrl = "http://localhost:5001/";
-  // baseUrl = "http://160.153.249.64:9092/";
+  // baseUrl = "http://localhost:5001/";
+  baseUrl = "http://160.153.249.64:9092/";
 
   //Post method
 
