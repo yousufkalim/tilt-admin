@@ -57,6 +57,7 @@ class Restaurant extends React.Component {
       pickupPlace: "",
       imagePath: null,
       currId: "",
+      isPremium: false,
     };
   }
 
@@ -122,14 +123,14 @@ class Restaurant extends React.Component {
     }
   };
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      this.handleBtnDisable();
-    });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleUpdateRestaurant = (item) => {
+    console.log(item, "item");
     this.setState({
       name: item.firstName,
+      isPremium: item.restaurant.isPremium,
       password: item.password,
       email: item.email,
       phone: item.phone ? item.phone : "",
@@ -220,11 +221,13 @@ class Restaurant extends React.Component {
       imagePath,
       pickupPlace,
       currId,
+      isPremium,
     } = this.state;
     const formdata = new FormData();
     formdata.append("name", name);
     formdata.append("email", email);
     formdata.append("phone", phone);
+    formdata.append("isPremium", isPremium);
     // formdata.append("password", password);
     formdata.append("address", JSON.stringify({ street, zip, city }));
     formdata.append("pickupPlace", pickupPlace);
@@ -294,10 +297,7 @@ class Restaurant extends React.Component {
   };
 
   handleImageUpload = (e) => {
-    this.setState({ imagePath: e.target.files[0] }, () => {
-      console.log(this.state.imagePath);
-      this.handleBtnDisable();
-    });
+    this.setState({ imagePath: e.target.files[0] });
   };
 
   render() {
@@ -567,6 +567,20 @@ class Restaurant extends React.Component {
                 value={this.state.pickupPlace}
                 onChange={this.handleChange}
               />
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>
+                isPremium<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                as="select"
+                value={this.state.isPremium}
+                name="isPremium"
+                onChange={this.handleChange}
+              >
+                <option value={true}>yes</option>
+                <option value={false}>false</option>
+              </Form.Control>
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Image</Form.Label>
