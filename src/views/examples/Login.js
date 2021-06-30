@@ -62,7 +62,12 @@ class Login extends React.Component {
         console.log(response);
         if (response.token) {
           localStorage.setItem("token", response.token);
-          this.props.history.push("/admin/index");
+          localStorage.setItem("user", JSON.stringify(response.user));
+          if (response.user.role === "admin") {
+            this.props.history.push("/admin/index");
+          } else {
+            window.alert("Something went wrong");
+          }
         } else {
           window.alert("Something went wrong");
         }
