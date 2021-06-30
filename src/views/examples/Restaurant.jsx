@@ -88,7 +88,6 @@ class Restaurant extends React.Component {
             RestaurantDatais.push([
               item.firstName,
               item.email,
-              item.phone,
               `${item.address.street}, ${item.address.city}, ${item.address.zip}`,
               item.restaurant.pickupPlace,
               item.block !== undefined && item.block !== null
@@ -129,32 +128,19 @@ class Restaurant extends React.Component {
   };
 
   handleUpdateRestaurant = (item) => {
-    console.log(item);
-    // this.WebServicesManager.getApiCall(
-    //   {
-    //     endPoint: "restaurant/getbyid/" + id,
-    //     // dataToFetch:id,
-    //     token: tokn,
-    //   },
-    //   (statusCode, response) => {
-    //     //debugger;;
-    const { _id, firstName, email, phone, password, address, restaurant } = item;
-    //debugger;;
     this.setState({
-      name: firstName,
-      password,
-      email,
-      phone,
-      street: address.street,
-      city: address.city,
-      zip: address.zip,
+      name: item.firstName,
+      password: item.password,
+      email: item.email,
+      phone: item.phone ? item.phone : "",
+      street: item.address.street,
+      city: item.address.city,
+      zip: item.address.zip,
       imagePath: null,
-      pickupPlace: restaurant.pickupPlace,
-      currId: _id,
+      pickupPlace: item.restaurant.pickupPlace,
+      currId: item._id,
       updateRestaurant: true,
     });
-    //   }
-    // );
   };
 
   handleAdd = () => {
@@ -172,7 +158,7 @@ class Restaurant extends React.Component {
         pickupPlace,
       } = this.state;
 
-      console.log(this.state)
+      console.log(this.state);
       const formdata = new FormData();
       formdata.append("name", name);
       formdata.append("email", email);
@@ -183,25 +169,25 @@ class Restaurant extends React.Component {
       formdata.append("image", imagePath);
 
       console.log("formdata ", formdata);
-      // this.WebServicesManager.postApiCallFormData(
-      //   {
-      //     endPoint: "restaurant",
-      //     dataToInsert: formdata,
-      //     token: localStorage.getItem("token"),
-      //   },
-      //   (statusCode, responseAdd) => {
-      //     // //debugger;;
-      //     if (responseAdd.message) {
-      //       this.setState({ setBtnDisable: false }, () => {
-      //         window.alert(responseAdd.message);
-      //       });
-      //     } else {
-      //       this.handleClose();
-      //       this.handleResetState();
-      //       this.handleLoadData();
-      //     }
-      //   }
-      // );
+      this.WebServicesManager.postApiCallFormData(
+        {
+          endPoint: "restaurant",
+          dataToInsert: formdata,
+          token: localStorage.getItem("token"),
+        },
+        (statusCode, responseAdd) => {
+          // //debugger;;
+          if (responseAdd.message) {
+            this.setState({ setBtnDisable: false }, () => {
+              window.alert(responseAdd.message);
+            });
+          } else {
+            this.handleClose();
+            this.handleResetState();
+            this.handleLoadData();
+          }
+        }
+      );
     });
   };
 
@@ -235,7 +221,6 @@ class Restaurant extends React.Component {
       pickupPlace,
       currId,
     } = this.state;
-    console.log(currId);
     const formdata = new FormData();
     formdata.append("name", name);
     formdata.append("email", email);
@@ -249,14 +234,15 @@ class Restaurant extends React.Component {
     this.setState({ setBtnDisable: true }, () => {
       this.WebServicesManager.putApiForm(
         {
-          endPoint: "restaurant/edit/" + currId,
+          endPoint: "restaurant/editByAdmin/" + currId,
           dataToUpdate: formdata,
           token: localStorage.getItem("token"),
+          restaurantUpdate: true,
         },
         (statusCode, responseUpdate) => {
           if (responseUpdate.message) {
             this.setState({ setBtnDisable: false }, () => {
-              // window.alert(responseUpdate.message);
+              window.alert(responseUpdate.message);
             });
           } else {
             this.handleResetState();
@@ -265,6 +251,8 @@ class Restaurant extends React.Component {
         }
       );
     });
+
+    this.setState({ setBtnDisable: false });
   };
 
   handleBtnDisable = () => {
@@ -278,6 +266,7 @@ class Restaurant extends React.Component {
       city,
       imagePath,
       pickupPlace,
+      updateRestaurant,
     } = this.state;
     // debugger;
     if (
@@ -288,9 +277,12 @@ class Restaurant extends React.Component {
       street &&
       zip &&
       city &&
-      imagePath &&
       pickupPlace
     ) {
+      this.setState({
+        setBtnDisable: false,
+      });
+    } else if (imagePath === null && updateRestaurant) {
       this.setState({
         setBtnDisable: false,
       });
@@ -309,7 +301,7 @@ class Restaurant extends React.Component {
   };
 
   render() {
-    console.log(this.state.RestaurantList,"this.state.RestaurantList")
+    console.log(this.state.RestaurantList, "this.state.RestaurantList");
     const actionsList = {
       addAction: () => {
         this.setState({ showAdd: true });
@@ -327,7 +319,7 @@ class Restaurant extends React.Component {
           <>
             {this.state.RestaurantList.length > 0 ? (
               <DataTableComponent
-                actionCol={7}
+                actionCol={6}
                 columns={columns}
                 data={this.state.RestaurantList}
                 actions={actionsList}
@@ -514,9 +506,7 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>
-                Contact Number
-              </Form.Label>
+              <Form.Label>Contact Number</Form.Label>
               <Form.Control
                 type="number"
                 name="phone"
