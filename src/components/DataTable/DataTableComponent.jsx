@@ -14,8 +14,6 @@ export default class DataTableComponent extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
-
     this.$el = $(this.el);
     if (this.props.is_order !== true) {
       this.$el.DataTable({
@@ -111,13 +109,17 @@ export default class DataTableComponent extends Component {
       <div>
         {this.props.hideAdd !== true ? (
           <Row style={{ flexDirection: "row-reverse" }}>
-            <Button
-              vairent="primary"
-              className="AddBtn"
-              onClick={this.props.actions.addAction}
-            >
-              Add
-            </Button>
+            {this.props.btn || this.props.btn === undefined ? (
+              <Button
+                vairent="primary"
+                className="AddBtn"
+                onClick={this.props.actions.addAction}
+              >
+                Add
+              </Button>
+            ) : (
+              <></>
+            )}
           </Row>
         ) : (
           ""
