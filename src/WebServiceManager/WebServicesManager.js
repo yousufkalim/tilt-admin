@@ -1,7 +1,7 @@
 import React from "react";
 
 export default class WebServicesManager extends React.Component {
-  baseUrl = "http://localhost:5001/";
+  baseUrl = process.env.REACT_APP_BASEURL;
   // baseUrl = "http://160.153.249.64:9092/";
 
   //Post method
@@ -67,10 +67,9 @@ export default class WebServicesManager extends React.Component {
       "Content-Type": "application/json",
     };
     if (params.token !== undefined) {
-      headeris["Authorization"] = params.token;
+      headeris["Authorization"] = "Bearer " + params.token;
     }
 
-    console.log("adasdasdasd", baseURL, headeris);
     fetch(baseURL, {
       method: "Get",
       headers: headeris,
@@ -141,7 +140,6 @@ export default class WebServicesManager extends React.Component {
   }
 
   callGetMethodForFilter(baseURL, params, callback) {
-    console.log("BaseUrl", baseURL);
     fetch(baseURL, {
       method: "Get",
       headers: {
@@ -160,7 +158,6 @@ export default class WebServicesManager extends React.Component {
   }
 
   getApiCallForFilter(params, callback) {
-    console.log("datatoinsert", params.dataToInsert.Lat);
     return this.callGetMethodForFilter(
       this.baseUrl +
         params.endPoint +
@@ -423,7 +420,6 @@ export default class WebServicesManager extends React.Component {
       .then((responseJson) => {
         let statusCode = responseJson.code;
         if (params.restaurantUpdate) {
-          console.log("Called object");
           callback(statusCode, responseJson);
         } else {
           callback(statusCode, responseJson.data);

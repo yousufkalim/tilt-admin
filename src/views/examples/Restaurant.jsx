@@ -82,7 +82,6 @@ class Restaurant extends React.Component {
       },
       (statusCode, response) => {
         //debugger;;
-        console.log(response);
         var RestaurantDatais = [];
         response.restaurants.map((item) => {
           if (item.status !== "deleted") {
@@ -127,7 +126,6 @@ class Restaurant extends React.Component {
   };
 
   handleUpdateRestaurant = (item) => {
-    console.log(item, "item");
     this.setState({
       name: item.firstName,
       isPremium: item.restaurant.isPremium,
@@ -159,7 +157,6 @@ class Restaurant extends React.Component {
         pickupPlace,
       } = this.state;
 
-      console.log(this.state);
       const formdata = new FormData();
       formdata.append("name", name);
       formdata.append("email", email);
@@ -169,7 +166,6 @@ class Restaurant extends React.Component {
       formdata.append("pickupPlace", pickupPlace);
       formdata.append("image", imagePath);
 
-      console.log("formdata ", formdata);
       this.WebServicesManager.postApiCallFormData(
         {
           endPoint: "restaurant",
@@ -301,7 +297,6 @@ class Restaurant extends React.Component {
   };
 
   render() {
-    console.log(this.state.RestaurantList, "this.state.RestaurantList");
     const actionsList = {
       addAction: () => {
         this.setState({ showAdd: true });

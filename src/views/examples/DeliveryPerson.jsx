@@ -73,7 +73,6 @@ class DeliveryPerson extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log(response);
         var userDatais = [];
         response.users.map((item) => {
           //debugger;;

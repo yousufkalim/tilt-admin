@@ -70,10 +70,8 @@ class Users extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log(response);
         var userDetails = [];
-        response.users.map(item => {
-          console.log("hey",item.user.company);
+        response.users.map((item) => {
           if (item.status !== "deleted") {
             userDetails.push([
               item.firstName,
