@@ -67,8 +67,10 @@ export default class WebServicesManager extends React.Component {
       "Content-Type": "application/json",
     };
     if (params.token !== undefined) {
-      headeris["Authorization"] = "Bearer " + params.token;
+      headeris["Authorization"] = params.token;
     }
+
+    console.log("adasdasdasd", baseURL, headeris);
     fetch(baseURL, {
       method: "Get",
       headers: headeris,

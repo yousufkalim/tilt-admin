@@ -4,6 +4,7 @@ import Companies from "views/examples/Companies";
 import Packages from "views/examples/Packages";
 import Discounts from "views/examples/Discounts";
 import Restaurant from "views/examples/Restaurant";
+import Orders from "views/examples/Orders";
 import Blocks from "views/examples/Blocks";
 import DeliveryPerson from "views/examples/DeliveryPerson";
 import Profile from "views/examples/Profile.js";
@@ -26,6 +27,13 @@ var routes = [
     name: "Users",
     icon: "ni ni-single-02 text-yellow",
     component: Users,
+    layout: "/admin",
+  },
+  {
+    path: "/orders",
+    name: "Orders",
+    icon: "ni ni-collection text-purple",
+    component: Orders,
     layout: "/admin",
   },
   {
