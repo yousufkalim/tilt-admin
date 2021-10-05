@@ -29,6 +29,7 @@ import CustomHeader from "components/Headers/CustomHeader.js";
 const columns = [
   { title: "Name" },
   { title: "Delivery Place" },
+  { title: "Address" },
   { title: "Block" },
   { title: "Actions" },
 ];
