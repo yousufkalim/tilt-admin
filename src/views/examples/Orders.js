@@ -102,10 +102,14 @@ class Company extends React.Component {
           let dishesName = order.dishes.map((dish) => {
             return dish.name;
           });
+
+          let companyName = order.companies.map((company) => {
+            return company.name;
+          });
           orderDetails.push([
             moment(order.time).format("L"),
             order.user.firstName + " " + order.user.lastName,
-            order.companies.length > 0 ? order.companies.join(", ") : "N/A",
+            order.companies.length > 0 ? companyName.join(", ") : "N/A",
             restaurantsName.join(", "),
             dishesName.join(", "),
             "$" + order.paidPrice,
