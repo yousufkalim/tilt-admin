@@ -271,9 +271,7 @@ class Packages extends React.Component {
             item._id,
           ]);
         });
-        this.setState({ blockList: blockDetails }, () => {
-          console.log("response state", this.state.blockList);
-        });
+        this.setState({ blockList: blockDetails }, () => {});
       }
     );
   };
@@ -301,9 +299,7 @@ class Packages extends React.Component {
     });
   };
   handleSelectMultiple = (e) => {
-    this.setState({ selectedCompany: e }, () => {
-      console.log("rsr", this.state);
-    });
+    this.setState({ selectedCompany: e }, () => {});
 
     // const options = e.target.options
     // const arre = [];
@@ -320,9 +316,7 @@ class Packages extends React.Component {
     // });
   };
   handleSelectMultipleRest = (e) => {
-    this.setState({ selectedRestaurant: e }, () => {
-      console.log("rsr", this.state);
-    });
+    this.setState({ selectedRestaurant: e }, () => {});
   };
 
   handleupdateBlock = (id) => {
@@ -333,7 +327,6 @@ class Packages extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        console.log("New Response", response);
         //////debugger;;
         const {
           name,

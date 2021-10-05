@@ -242,7 +242,9 @@ class Discounts extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>leastCartValue<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                leastCartValue<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="leastCartValue"
@@ -253,7 +255,9 @@ class Discounts extends React.Component {
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>referralDiscount<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                referralDiscount<span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="Number"
                 name="referralDiscount"

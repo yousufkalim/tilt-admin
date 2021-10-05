@@ -93,7 +93,6 @@ class Company extends React.Component {
   }
 
   handleAdd = () => {
-    console.log("city req ", this.state.city);
     this.setState({ setBtnDisable: true }, () => {
       //debugger;;
       const { name, deliveryPlace, street, city } = this.state;
@@ -136,7 +135,6 @@ class Company extends React.Component {
       },
       (statusCode, response) => {
         var companyDetails = [];
-        console.log(response.companies);
         response.companies.map((item) => {
           if (item !== null) {
             companyDetails.push([
@@ -174,9 +172,7 @@ class Company extends React.Component {
     }
   };
   handleChange = (e) => {
-    console.log(e.target.value);
     this.setState({ [e.target.name]: e.target.value }, () => {
-      console.log("citty ", this.state.city);
       this.handleBtnDisable();
     });
   };
@@ -185,7 +181,6 @@ class Company extends React.Component {
     // //debugger;
 
     var tokn = localStorage.getItem("token");
-    console.log(id);
     this.WebServicesManager.getApiCall(
       {
         endPoint: "admin/company/get/" + id,
@@ -223,8 +218,6 @@ class Company extends React.Component {
     });
   };
   handleUpdateSubmit = (e) => {
-    console.log("city run ");
-    console.log("INFO", this.state.city);
     const { name, currId, deliveryPlace, street, city, block } = this.state;
     const info = {
       name,
@@ -278,8 +271,6 @@ class Company extends React.Component {
       updateAction: (id) => this.handleUpdateCompany(id),
       deleteAction: (id) => this.handleDelete(id),
     };
-
-    console.log(actionsList);
 
     return (
       <>

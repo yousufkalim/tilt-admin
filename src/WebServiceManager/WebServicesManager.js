@@ -70,8 +70,6 @@ export default class WebServicesManager extends React.Component {
       headeris["Authorization"] = "Bearer " + params.token;
     }
 
-    console.log("tes", headeris, baseURL);
-
     fetch(baseURL, {
       method: "Get",
       headers: headeris,

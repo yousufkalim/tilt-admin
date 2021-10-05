@@ -59,7 +59,6 @@ class Login extends React.Component {
     this.WebServicesManager.LogIn(
       { endPoint: "auth/login", dataToLogIn: dataToLogIn },
       (statusCode, response) => {
-        console.log(response);
         if (response.token) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
