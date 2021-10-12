@@ -81,26 +81,26 @@ class Restaurant extends React.Component {
         token: tokn,
       },
       (statusCode, response) => {
-        //debugger;;
         var RestaurantDatais = [];
         response.restaurants.map((item) => {
+          let blocks = [];
+          item.block.map((b) => {
+            blocks.push(b.name);
+          });
+
           if (item.status !== "deleted") {
             RestaurantDatais.push([
               item.firstName,
               item.email,
               `${item.address.street}, ${item.address.city}, ${item.address.zip}`,
               item.restaurant.pickupPlace,
-              item.block !== undefined && item.block !== null
-                ? item.block.name
-                : "No Block Assigned",
+              blocks.length > 0 ? blocks.join(", ") : "No Block Assigned",
               item.restaurant.dishes.length,
               item,
             ]);
           }
         });
-        this.setState({ RestaurantList: RestaurantDatais }, () => {
-          // console.log('response state',this.state.RestaurantList);
-        });
+        this.setState({ RestaurantList: RestaurantDatais }, () => {});
       }
     );
   };
@@ -590,6 +590,7 @@ class Restaurant extends React.Component {
             <Button variant="secondary" onClick={this.handleUpdateClose}>
               Close
             </Button>
+            {this.state.setBtnDisable}
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
