@@ -145,15 +145,20 @@ class Packages extends React.Component {
               id: item._id,
               name: item.firstName,
             });
+            allDevPerson.push({
+              id: item._id,
+              name: item.firstName,
+            });
+          } else {
+            item.block.map((b) => {
+              if (b._id === this.state.currId && item.status !== "deleted") {
+                allDevPerson.push({
+                  id: item._id,
+                  name: item.firstName,
+                });
+              }
+            });
           }
-          item.block.map((b) => {
-            if (b._id === this.state.currId && item.status !== "deleted") {
-              allDevPerson.push({
-                id: item._id,
-                name: item.firstName,
-              });
-            }
-          });
         });
         this.setState(
           {
