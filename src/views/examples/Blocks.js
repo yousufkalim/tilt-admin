@@ -115,10 +115,7 @@ class Packages extends React.Component {
       },
       (statusCode, response) => {
         response.restaurants.map((item) => {
-          if (
-            item.block === null ||
-            (item.block === undefined && item.status !== "deleted")
-          ) {
+          if (item.status !== "deleted") {
             restaurantsListFilter.push({
               value: item._id,
               label: item.firstName,
@@ -143,24 +140,23 @@ class Packages extends React.Component {
       },
       (statusCode, response) => {
         response.users.map((item) => {
-          if (
-            (item.block === null || item.block === undefined) &&
-            item.status !== "deleted"
-          ) {
+          if (item.block.length === 0 && item.status !== "deleted") {
             deliveryPersonListFilter.push({
               id: item._id,
               name: item.firstName,
             });
-          }
-          if (
-            (item.block === null ||
-              item.block === undefined ||
-              item.block._id === this.state.currId) &&
-            item.status !== "deleted"
-          ) {
             allDevPerson.push({
               id: item._id,
               name: item.firstName,
+            });
+          } else {
+            item.block.map((b) => {
+              if (b._id === this.state.currId && item.status !== "deleted") {
+                allDevPerson.push({
+                  id: item._id,
+                  name: item.firstName,
+                });
+              }
             });
           }
         });
@@ -255,7 +251,7 @@ class Packages extends React.Component {
               ? "No restaurant available"
               : item.restaurants
                   .filter((res) => res.status !== "deleted")
-                  .map((rest) => rest.firstName),
+                  .map((rest) => " " + rest.firstName),
             item.companies.length !== 0
               ? finalString
               : "No companies available",
