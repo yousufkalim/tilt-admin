@@ -112,7 +112,7 @@ class Company extends React.Component {
             order.companies.length > 0 ? companyName.join(", ") : "N/A",
             restaurantsName.join(", "),
             dishesName.join(", "),
-            "$" + order.paidPrice,
+            "€" + order.paidPrice,
           ]);
         });
         this.setState({ orderList: orderDetails });
