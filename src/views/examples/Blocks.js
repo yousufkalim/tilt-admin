@@ -2,6 +2,8 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import "react-datetime/css/react-datetime.css";
+import Datetime from "react-datetime";
 
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -173,7 +175,7 @@ class Packages extends React.Component {
 
   handleAdd = () => {
     this.setState({ setBtnDisable: true }, () => {
-      const {
+      let {
         name,
         timeForOrder,
         pickUpTime,
@@ -189,7 +191,10 @@ class Packages extends React.Component {
       selectedCompany.map((com) => ll.push(com.value));
       selectedRestaurant.map((rest) => l2.push(rest.value));
 
-      ////debugger;;
+      timeForOrder = moment(timeForOrder).format("HH:MM");
+      pickUpTime = moment(pickUpTime).format("HH:MM");
+      deliveryTime = moment(deliveryTime).format("HH:MM");
+
       const info = {
         name,
         timeForOrder,
@@ -432,7 +437,7 @@ class Packages extends React.Component {
       alert("Pickup And Order Times Cannot Be Same");
       return;
     }
-    const {
+    let {
       currId,
       name,
       timeForOrder,
@@ -450,6 +455,11 @@ class Packages extends React.Component {
     let updatedRestaurants = [];
     selectedRestaurant !== null &&
       selectedRestaurant.map((cp) => updatedRestaurants.push(cp.value));
+
+    timeForOrder = moment(timeForOrder).format("HH:MM");
+    pickUpTime = moment(pickUpTime).format("HH:MM");
+    deliveryTime = moment(deliveryTime).format("HH:MM");
+
     const info = {
       name,
       timeForOrder,
@@ -580,40 +590,71 @@ class Packages extends React.Component {
               <Form.Label>
                 Order Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="timeForOrder"
-                placeholder="Enter Order Time"
-                value={this.state.timeForOrder}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+            <Datetime
+              name="timeForOrder"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.timeForOrder}
+              onChange={(e) => this.setState({ timeForOrder: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
                 PickUp Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="pickUpTime"
-                placeholder="Enter Pick up Time"
-                value={this.state.pickUpTime}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+            <Datetime
+              name="pickUpTime"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.pickUpTime}
+              onChange={(e) => this.setState({ pickUpTime: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
                 Delivery Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="deliveryTime"
-                placeholder="Enter Delivery Time"
-                value={this.state.deliveryTime}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+
+            <Datetime
+              name="deliveryTime"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.deliveryTime}
+              onChange={(e) => this.setState({ deliveryTime: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
@@ -709,45 +750,75 @@ class Packages extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
                 Order Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="timeForOrder"
-                placeholder="Enter Order Time"
-                value={this.state.timeForOrder}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+            <Datetime
+              name="timeForOrder"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.timeForOrder}
+              onChange={(e) => this.setState({ timeForOrder: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
                 PickUp Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="pickUpTime"
-                placeholder="Enter Pick up Time"
-                value={this.state.pickUpTime}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+            <Datetime
+              name="pickUpTime"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.pickUpTime}
+              onChange={(e) => this.setState({ pickUpTime: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
                 Delivery Time<span style={{ color: "red" }}>*</span>
               </Form.Label>
-              <Form.Control
-                type="time"
-                name="deliveryTime"
-                placeholder="Enter Delivery Time"
-                value={this.state.deliveryTime}
-                onChange={this.handleChange}
-              />
             </Form.Group>
+
+            <Datetime
+              name="deliveryTime"
+              timeFormat="HH:mm"
+              dateFormat={false}
+              value={this.state.deliveryTime}
+              onChange={(e) => this.setState({ deliveryTime: e })}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  backgroundColor: "#ffff",
+                  cursor: "pointer",
+                  marginTop: "-26px",
+                  marginBottom: "20px",
+                },
+                placeholder: "--:--",
+              }}
+            />
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
