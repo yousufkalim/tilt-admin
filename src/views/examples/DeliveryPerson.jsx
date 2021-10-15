@@ -81,8 +81,10 @@ class DeliveryPerson extends React.Component {
               item.firstName,
               item.lastName,
               item.email,
-              item.block !== undefined && item.block !== null
-                ? item.block.name
+              item.block.length !== 0
+                ? item.block.map((b) => {
+                    return b.name + " ";
+                  })
                 : "No Block Assigned",
               item._id,
             ]);

@@ -40,7 +40,7 @@ const cities = [
     value: "",
   },
   {
-    name: "Riviére Saléec",
+    name: "Riviére Salée",
     value: "RS",
   },
   {

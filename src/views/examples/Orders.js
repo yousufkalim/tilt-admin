@@ -107,12 +107,12 @@ class Company extends React.Component {
             return company.name;
           });
           orderDetails.push([
-            moment(order.time).format("L"),
+            moment(order.time).format("DD-MM-YYYY"),
             order.user.firstName + " " + order.user.lastName,
             order.companies.length > 0 ? companyName.join(", ") : "N/A",
             restaurantsName.join(", "),
             dishesName.join(", "),
-            "$" + order.paidPrice,
+            "€" + order.paidPrice,
           ]);
         });
         this.setState({ orderList: orderDetails });
