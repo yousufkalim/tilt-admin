@@ -29,6 +29,7 @@ import CustomHeader from "components/Headers/CustomHeader.js";
 const columns = [
   { title: "Name" },
   { title: "Delivery Place" },
+  { title: "Phone Number" },
   { title: "Address" },
   { title: "Block" },
   { title: "Actions" },
@@ -59,6 +60,10 @@ const cities = [
     name: "Schoelcher",
     value: "SCH",
   },
+  {
+    name: "Sainte Luce",
+    value: "SL",
+  },
 ];
 
 class Company extends React.Component {
@@ -77,6 +82,7 @@ class Company extends React.Component {
       street: "",
       city: "",
       currId: "",
+      phone: "",
     };
   }
 
@@ -96,10 +102,11 @@ class Company extends React.Component {
   handleAdd = () => {
     this.setState({ setBtnDisable: true }, () => {
       //debugger;;
-      const { name, deliveryPlace, street, city } = this.state;
+      const { name, deliveryPlace, phone, street, city } = this.state;
       const info = {
         name,
         deliveryPlace,
+        phone,
         street,
         city,
       };
@@ -141,6 +148,7 @@ class Company extends React.Component {
             companyDetails.push([
               item.name,
               item.deliveryPlace,
+              item.phone ? item.phone : "N/A",
               item.street,
               item.block !== null && item.block !== undefined
                 ? item.block.name
@@ -149,9 +157,7 @@ class Company extends React.Component {
             ]);
           }
         });
-        this.setState({ companyList: companyDetails }, () => {
-          console.log("response state", this.state.companyList);
-        });
+        this.setState({ companyList: companyDetails });
       }
     );
   };
@@ -190,11 +196,13 @@ class Company extends React.Component {
       },
       (statusCode, response) => {
         // //debugger;;
-        const { name, deliveryPlace, street, city, block } = response.company;
+        const { name, deliveryPlace, phone, street, city, block } =
+          response.company;
         this.setState(
           {
             name,
             deliveryPlace,
+            phone,
             street,
             city,
             block,
@@ -213,16 +221,19 @@ class Company extends React.Component {
     this.setState({
       name: "",
       deliveryPlace: "",
+      phone: "",
       street: "",
       city: "",
       showAdd: false,
     });
   };
   handleUpdateSubmit = (e) => {
-    const { name, currId, deliveryPlace, street, city, block } = this.state;
+    const { name, currId, deliveryPlace, phone, street, city, block } =
+      this.state;
     const info = {
       name,
       deliveryPlace,
+      phone,
       street,
       city,
       block,
@@ -253,8 +264,14 @@ class Company extends React.Component {
   };
 
   handleBtnDisable = () => {
-    const { name, deliveryPlace, street, city } = this.state;
-    if (name !== "" && deliveryPlace !== "" && street !== "" && city !== "") {
+    const { name, deliveryPlace, street, city, phone } = this.state;
+    if (
+      name !== "" &&
+      deliveryPlace !== "" &&
+      street !== "" &&
+      city !== "" &&
+      phone !== ""
+    ) {
       this.setState({
         setBtnDisable: false,
       });
@@ -282,7 +299,7 @@ class Company extends React.Component {
           <>
             {this.state.companyList.length > 0 ? (
               <DataTableComponent
-                actionCol={4}
+                actionCol={5}
                 columns={columns}
                 data={this.state.companyList}
                 actions={actionsList}
@@ -334,6 +351,19 @@ class Company extends React.Component {
                 name="deliveryPlace"
                 placeholder="Enter Delivery Place"
                 value={this.state.deliveryPlace}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Contact Number<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                name="phone"
+                placeholder="Enter contact number"
+                value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
@@ -410,6 +440,19 @@ class Company extends React.Component {
                 name="deliveryPlace"
                 placeholder="Enter Deliver Place"
                 value={this.state.deliveryPlace}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                Contact Number<span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                name="phone"
+                placeholder="Enter contact number"
+                value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
