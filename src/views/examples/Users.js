@@ -30,6 +30,7 @@ const columns = [
   { title: "First Name" },
   { title: "Last Name" },
   { title: "Company" },
+  { title: "Phone Number" },
   { title: "Actions" },
 ];
 
@@ -79,6 +80,7 @@ class Users extends React.Component {
               item.user.company !== undefined && item.user.company !== null
                 ? item.user.company.name
                 : "No company",
+              item.phone ? item.phone : "N/A",
               item._id,
             ]);
           }
@@ -205,7 +207,7 @@ class Users extends React.Component {
           <>
             {this.state.userList.length > 0 ? (
               <DataTableComponent
-                actionCol={3}
+                actionCol={4}
                 columns={columns}
                 data={this.state.userList}
                 actions={actionsList}
