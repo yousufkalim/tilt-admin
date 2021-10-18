@@ -59,6 +59,10 @@ const cities = [
     name: "Schoelcher",
     value: "SCH",
   },
+  {
+    name: "Sainte Luce",
+    value: "SL",
+  },
 ];
 
 class Company extends React.Component {
