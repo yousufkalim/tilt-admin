@@ -14,7 +14,8 @@ const columns = [
   { title: "Client Name" },
   { title: "Company Name" },
   { title: "Restaurant Name" },
-  { title: "Order information" },
+  { title: "Order Information" },
+  { title: "Order Status" },
   { title: "Price" },
 ];
 
@@ -112,6 +113,7 @@ class Company extends React.Component {
             order.companies.length > 0 ? companyName.join(", ") : "N/A",
             restaurantsName.join(", "),
             dishesName.join(", "),
+            order.status,
             "€" + order.paidPrice,
           ]);
         });
