@@ -1,9 +1,12 @@
 import React from "react";
 
 export default class WebServicesManager extends React.Component {
-  baseUrl = process.env.REACT_APP_BASEURL;
-  // baseUrl = "http://160.153.249.64:9092/";
+  baseUrl =
+    window.location.host === "admin.tilt-entreprise.com"
+      ? "https://api.tilt-entreprise.com/"
+      : process.env.REACT_APP_BASEURL;
 
+  // baseUrl = "http://160.153.249.64:9092/";
   //Post method
 
   callPostMethod(apiURL, params, callback) {
