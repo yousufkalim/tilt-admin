@@ -18,3 +18,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TILT_DEMO }}'
           channelId: live
           projectId: tilt-demo
+          target: dev

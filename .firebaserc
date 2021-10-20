@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "tilt-demo"
+  },
+  "targets": {
+    "tilt-demo": {
+      "hosting": {
+        "dev": [
+          "admin-tilt"
+        ],
+        "prod": [
+          "admin-tilt-prod"
+        ]
+      }
+    }
   }
 }
