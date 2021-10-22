@@ -1,12 +1,7 @@
 import React from "react";
+import { baseUrl } from "../config";
 
 export default class WebServicesManager extends React.Component {
-  baseUrl =
-    window.location.host === "admin.tilt-entreprise.com"
-      ? "https://api.tilt-entreprise.com/"
-      : process.env.REACT_APP_BASEURL;
-
-  // baseUrl = "http://160.153.249.64:9092/";
   //Post method
 
   callPostMethod(apiURL, params, callback) {
@@ -31,11 +26,7 @@ export default class WebServicesManager extends React.Component {
       });
   }
   postApiCall(params, callback) {
-    return this.callPostMethod(
-      this.baseUrl + params.endPoint,
-      params,
-      callback
-    );
+    return this.callPostMethod(baseUrl + params.endPoint, params, callback);
   }
   callPostMethodFormData(apiURL, params, callback) {
     let headeris = {};
@@ -58,7 +49,7 @@ export default class WebServicesManager extends React.Component {
   }
   postApiCallFormData(params, callback) {
     return this.callPostMethodFormData(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -88,7 +79,7 @@ export default class WebServicesManager extends React.Component {
   }
 
   getApiCall(params, callback) {
-    return this.callGetMethod(this.baseUrl + params.endPoint, params, callback);
+    return this.callGetMethod(baseUrl + params.endPoint, params, callback);
   }
 
   //Get method for contactUs
@@ -110,7 +101,7 @@ export default class WebServicesManager extends React.Component {
   }
   getApiCallForContactUs(params, callback) {
     return this.callGetMethodForContactUs(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -136,7 +127,7 @@ export default class WebServicesManager extends React.Component {
   }
   getApiCallForEmail(params, callback) {
     return this.callGetMethodForEmailValidate(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -162,7 +153,7 @@ export default class WebServicesManager extends React.Component {
 
   getApiCallForFilter(params, callback) {
     return this.callGetMethodForFilter(
-      this.baseUrl +
+      baseUrl +
         params.endPoint +
         "/?lat=" +
         params.dataToInsert.Lat +
@@ -200,7 +191,7 @@ export default class WebServicesManager extends React.Component {
   }
   callPostToGetAllPerson(params, callback) {
     return this.callPostMethodToGetAllPerson(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -225,7 +216,7 @@ export default class WebServicesManager extends React.Component {
 
   postApiNearbyInstructorsCall(params, callback) {
     return this.callPostNearbyInstructorMethod(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -295,7 +286,7 @@ export default class WebServicesManager extends React.Component {
 
   GetBookletCmt(baseURL, params, callback) {
     baseURL =
-      this.baseUrl +
+      baseUrl +
       baseURL +
       "/?studentId=" +
       params[0] +
@@ -321,7 +312,7 @@ export default class WebServicesManager extends React.Component {
   }
   getApiWithParamCall(params, callback) {
     return this.callGetWithParamMethod(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -329,14 +320,14 @@ export default class WebServicesManager extends React.Component {
 
   getApiForForgotPassword(params, callback) {
     return this.callGetApiForgotPassword(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
   }
   getApiwithParamReturnMsg(params, callback) {
     return this.callApiwithParamReturnMsg(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -367,7 +358,7 @@ export default class WebServicesManager extends React.Component {
   }
 
   LogIn(params, callback) {
-    return this.callGetLogIn(this.baseUrl + params.endPoint, params, callback);
+    return this.callGetLogIn(baseUrl + params.endPoint, params, callback);
   }
 
   //Update method
@@ -400,7 +391,7 @@ export default class WebServicesManager extends React.Component {
   }
 
   putApi(params, callback) {
-    return this.callPutMethod(this.baseUrl + params.endPoint, params, callback);
+    return this.callPutMethod(baseUrl + params.endPoint, params, callback);
   }
   //Get with parameters method with ID
   callPutMethodForm(baseURL, params, callback) {
@@ -432,11 +423,7 @@ export default class WebServicesManager extends React.Component {
   }
 
   putApiForm(params, callback) {
-    return this.callPutMethodForm(
-      this.baseUrl + params.endPoint,
-      params,
-      callback
-    );
+    return this.callPutMethodForm(baseUrl + params.endPoint, params, callback);
   }
 
   //`delete` with parameters method with ID
@@ -467,11 +454,7 @@ export default class WebServicesManager extends React.Component {
   }
 
   DeleteApi(params, callback) {
-    return this.callDeleteMethod(
-      this.baseUrl + params.endPoint,
-      params,
-      callback
-    );
+    return this.callDeleteMethod(baseUrl + params.endPoint, params, callback);
   }
 
   //delete with Id in url
@@ -504,7 +487,7 @@ export default class WebServicesManager extends React.Component {
 
   DeleteApiInURL(params, callback) {
     return this.callDeleteMethodInURL(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -562,14 +545,14 @@ export default class WebServicesManager extends React.Component {
 
   postMethodForSuspend(params, callback) {
     return this.callPostMethodForSuspend(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
   }
   postMethodForUpdatePassword(params, callback) {
     return this.callPostMethodForSuspend(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
@@ -591,7 +574,7 @@ export default class WebServicesManager extends React.Component {
 
   postApiImageCall(params, callback) {
     return this.callImagePostMethod(
-      this.baseUrl + params.endPoint,
+      baseUrl + params.endPoint,
       params,
       callback
     );
