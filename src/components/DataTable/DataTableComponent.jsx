@@ -94,6 +94,12 @@ export default class DataTableComponent extends Component {
                 td
               ),
           },
+          {
+            targets: 1,
+            createdCell: (td, cellData, rowData, row, col) => {
+              $(td).css("whiteSpace", "unset");
+            },
+          },
         ],
       });
     } else {
