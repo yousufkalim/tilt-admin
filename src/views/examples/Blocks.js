@@ -191,9 +191,65 @@ class Packages extends React.Component {
       selectedCompany.map((com) => ll.push(com.value));
       selectedRestaurant.map((rest) => l2.push(rest.value));
 
-      timeForOrder = moment(timeForOrder).format("HH:MM");
-      pickUpTime = moment(pickUpTime).format("HH:MM");
-      deliveryTime = moment(deliveryTime).format("HH:MM");
+      if (typeof timeForOrder === "object")
+        timeForOrder = moment(timeForOrder).format("HH:mm");
+      if (typeof pickUpTime === "object")
+        pickUpTime = moment(pickUpTime).format("HH:mm");
+      if (typeof deliveryTime === "object")
+        deliveryTime = moment(deliveryTime).format("HH:mm");
+
+      let date = new Date();
+      let hours = timeForOrder.slice(0, 2);
+      let mins = timeForOrder.slice(3, 5);
+      date.setHours(hours);
+      date.setMinutes(mins);
+      let tempTimeOrder = date;
+
+      let date1 = new Date();
+      let hours1 = pickUpTime.slice(0, 2);
+      let mins1 = pickUpTime.slice(3, 5);
+      date1.setHours(hours1);
+      date1.setMinutes(mins1);
+      let tempTimePick = date1;
+
+      let date2 = new Date();
+      let hours2 = deliveryTime.slice(0, 2);
+      let mins2 = deliveryTime.slice(3, 5);
+      date2.setHours(hours2);
+      date2.setMinutes(mins2);
+      let tempTimeDelivery = date2;
+
+      if (moment(tempTimeDelivery).isBefore(tempTimeOrder)) {
+        alert("Delivey Time Needs To Set After Order Time");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
+      if (moment(tempTimePick).isBefore(tempTimeOrder)) {
+        alert("Pickup Time Needs To Set After Order Time");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
+
+      if (moment(tempTimePick).isAfter(tempTimeDelivery)) {
+        alert("Pickup Time Needs To Be Before Delivery Time");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
+      if (deliveryTime === pickUpTime) {
+        alert("Delivery And Pickup Times Cannot Be Same");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
+      if (timeForOrder === deliveryTime) {
+        alert("Delivery And Order Times Cannot Be Same");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
+      if (timeForOrder === pickUpTime) {
+        alert("Pickup And Order Times Cannot Be Same");
+        this.setState({ setBtnDisable: false });
+        return;
+      }
 
       const info = {
         name,
@@ -466,7 +522,7 @@ class Packages extends React.Component {
       alert("Pickup Time Needs To Be Before Delivery Time");
       return;
     }
-    if (this.state.deliveryTime === this.state.pickUpTime) {
+    if (deliveryTime === pickUpTime) {
       alert("Delivery And Pickup Times Cannot Be Same");
       return;
     }
