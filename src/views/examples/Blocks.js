@@ -237,9 +237,7 @@ class Packages extends React.Component {
       },
       (statusCode, response) => {
         var blockDetails = [];
-        //////debugger;;
         response.blocks.map((item) => {
-          ////debugger;;
           var finalString = "<ul>";
           var endString = "</ul>";
           var middleString = "";
@@ -408,35 +406,6 @@ class Packages extends React.Component {
     );
   };
   handleUpdateSubmit = () => {
-    var orderTimeFormatted = moment(this.state.timeForOrder, "h:mma");
-    var deliveryTimeFormatted = moment(this.state.deliveryTime, "h:mma");
-    var pickupTimeFormatted = moment(this.state.pickUpTime, "h:mma");
-
-    if (deliveryTimeFormatted.isBefore(orderTimeFormatted)) {
-      alert("Delivey Time Needs To Set After Order Time");
-      return;
-    }
-    if (pickupTimeFormatted.isBefore(orderTimeFormatted)) {
-      alert("Pickup Time Needs To Set After Order Time");
-      return;
-    }
-
-    if (pickupTimeFormatted.isAfter(deliveryTimeFormatted)) {
-      alert("Pickup Time Needs To Be Before Delivery Time");
-      return;
-    }
-    if (this.state.deliveryTime == this.state.pickUpTime) {
-      alert("Delivery And Pickup Times Cannot Be Same");
-      return;
-    }
-    if (this.state.timeForOrder == this.state.deliveryTime) {
-      alert("Delivery And Order Times Cannot Be Same");
-      return;
-    }
-    if (this.state.timeForOrder == this.state.pickUpTime) {
-      alert("Pickup And Order Times Cannot Be Same");
-      return;
-    }
     let {
       currId,
       name,
@@ -456,9 +425,59 @@ class Packages extends React.Component {
     selectedRestaurant !== null &&
       selectedRestaurant.map((cp) => updatedRestaurants.push(cp.value));
 
-    timeForOrder = moment(timeForOrder).format("HH:MM");
-    pickUpTime = moment(pickUpTime).format("HH:MM");
-    deliveryTime = moment(deliveryTime).format("HH:MM");
+    if (typeof timeForOrder === "object")
+      timeForOrder = moment(timeForOrder).format("HH:mm");
+    if (typeof pickUpTime === "object")
+      pickUpTime = moment(pickUpTime).format("HH:mm");
+    if (typeof deliveryTime === "object")
+      deliveryTime = moment(deliveryTime).format("HH:mm");
+
+    let date = new Date();
+    let hours = timeForOrder.slice(0, 2);
+    let mins = timeForOrder.slice(3, 5);
+    date.setHours(hours);
+    date.setMinutes(mins);
+    let tempTimeOrder = date;
+
+    let date1 = new Date();
+    let hours1 = pickUpTime.slice(0, 2);
+    let mins1 = pickUpTime.slice(3, 5);
+    date1.setHours(hours1);
+    date1.setMinutes(mins1);
+    let tempTimePick = date1;
+
+    let date2 = new Date();
+    let hours2 = deliveryTime.slice(0, 2);
+    let mins2 = deliveryTime.slice(3, 5);
+    date2.setHours(hours2);
+    date2.setMinutes(mins2);
+    let tempTimeDelivery = date2;
+
+    if (moment(tempTimeDelivery).isBefore(tempTimeOrder)) {
+      alert("Delivey Time Needs To Set After Order Time");
+      return;
+    }
+    if (moment(tempTimePick).isBefore(tempTimeOrder)) {
+      alert("Pickup Time Needs To Set After Order Time");
+      return;
+    }
+
+    if (moment(tempTimePick).isAfter(tempTimeDelivery)) {
+      alert("Pickup Time Needs To Be Before Delivery Time");
+      return;
+    }
+    if (this.state.deliveryTime === this.state.pickUpTime) {
+      alert("Delivery And Pickup Times Cannot Be Same");
+      return;
+    }
+    if (timeForOrder === deliveryTime) {
+      alert("Delivery And Order Times Cannot Be Same");
+      return;
+    }
+    if (timeForOrder === pickUpTime) {
+      alert("Pickup And Order Times Cannot Be Same");
+      return;
+    }
 
     const info = {
       name,
