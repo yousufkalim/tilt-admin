@@ -2,6 +2,7 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
 import {
@@ -27,9 +28,9 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "Least Cart value" },
-  { title: "Referral Discount" },
-  { title: "Actions" },
+  { title: Translation["Least Cart value"] },
+  { title: Translation["Referral Discount"] },
+  { title: Translation["Actions"] },
 ];
 
 class Discounts extends React.Component {
@@ -109,7 +110,9 @@ class Discounts extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete this discount?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -229,7 +232,9 @@ class Discounts extends React.Component {
             ) : (
               <>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -238,17 +243,18 @@ class Discounts extends React.Component {
         {/* UPDATE Discount */}
         <Modal show={this.state.updateDiscount} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Discounts</Modal.Title>
+            <Modal.Title>{Translation["Edit Discounts"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                leastCartValue<span style={{ color: "red" }}>*</span>
+                {Translation["Least Cart value"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="leastCartValue"
-                placeholder="Enter value"
+                placeholder={Translation["Enter value"]}
                 value={this.state.leastCartValue}
                 onChange={this.handleChange}
               />
@@ -256,12 +262,13 @@ class Discounts extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                referralDiscount<span style={{ color: "red" }}>*</span>
+                {Translation["Referral Discount"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="Number"
                 name="referralDiscount"
-                placeholder="Enter Price"
+                placeholder={Translation["Enter Price"]}
                 value={this.state.referralDiscount}
                 onChange={this.handleChange}
               />
@@ -270,14 +277,14 @@ class Discounts extends React.Component {
 
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Update
+              {Translation["Update"]}
             </Button>
           </Modal.Footer>
         </Modal>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Button, Row, Col } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // import end complimentory.
 const $ = require("jquery");
@@ -17,6 +18,20 @@ export default class DataTableComponent extends Component {
     this.$el = $(this.el);
     if (this.props.is_order !== true) {
       this.$el.DataTable({
+        language: {
+          lengthMenu: "_MENU_ entrées",
+          zeroRecords: Translation["No matching records found"],
+          info: "Affichage de _PAGE_ sur _PAGES_ entrées",
+          infoEmpty: Translation["No records found"],
+          infoFiltered: "(Filtrage sur les _MAX_ données)",
+          search: Translation["Search"],
+          paginate: {
+            first: Translation["First"],
+            last: Translation["Last"],
+            next: Translation["Next"],
+            previous: Translation["Previous"],
+          },
+        },
         data: this.props.data,
         columns: this.props.columns,
         columnDefs: [
@@ -34,7 +49,7 @@ export default class DataTableComponent extends Component {
                         }
                         style={{ width: "150px", marginTop: 10 }}
                       >
-                        Edit
+                        {Translation["Edit"]}
                       </Button>
                       <br />
                     </>
@@ -48,7 +63,7 @@ export default class DataTableComponent extends Component {
                       onClick={() => this.props.actions.deleteAction(cellData)}
                       style={{ width: "150px", marginTop: 10 }}
                     >
-                      Delete
+                      {Translation["Delete"]}
                     </Button>
                   ) : (
                     ""
@@ -63,7 +78,7 @@ export default class DataTableComponent extends Component {
                           variant="primary"
                           style={{ width: "150px", marginTop: 10 }}
                         >
-                          View Dishes
+                          {Translation["View Dishes"]}
                         </Button>
                       </a>
                       <br />
@@ -72,7 +87,7 @@ export default class DataTableComponent extends Component {
                           variant="secondary"
                           style={{ width: "150px", marginTop: 10 }}
                         >
-                          View Tables
+                          {Translation["View Tables"]}
                         </Button>
                       </a>
                     </>
@@ -85,7 +100,7 @@ export default class DataTableComponent extends Component {
                       onClick={() => this.props.actions.qrGenerate(cellData)}
                       style={{ width: "150px", marginTop: 10 }}
                     >
-                      QR
+                      {Translation["QR"]}
                     </Button>
                   ) : (
                     ""
@@ -121,7 +136,7 @@ export default class DataTableComponent extends Component {
                 className="AddBtn"
                 onClick={this.props.actions.addAction}
               >
-                Add
+                {Translation["Add"]}
               </Button>
             ) : (
               <></>

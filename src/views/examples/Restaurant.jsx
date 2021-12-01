@@ -2,38 +2,21 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Table,
-  Container,
-  Row,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row } from "reactstrap";
 // core components
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "Name" },
-  { title: "Email" },
-  { title: "Address" },
-  { title: "Pickup Place" },
-  { title: "Block" },
-  { title: "# of Dishes" },
-  { title: "Actions" },
+  { title: Translation["Name"] },
+  { title: Translation["Email"] },
+  { title: Translation["Address"] },
+  { title: Translation["Pickup Place"] },
+  { title: Translation["Block"] },
+  { title: Translation["# of Dishes"] },
+  { title: Translation["Actions"] },
 ];
 
 class Restaurant extends React.Component {
@@ -94,7 +77,9 @@ class Restaurant extends React.Component {
               item.email,
               `${item.address.street}, ${item.address.city}, ${item.address.zip}`,
               item.restaurant.pickupPlace,
-              blocks.length > 0 ? blocks.join(", ") : "No Block Assigned",
+              blocks.length > 0
+                ? blocks.join(", ")
+                : Translation["No Block Assigned"],
               item.restaurant.dishes.length,
               item,
             ]);
@@ -107,7 +92,9 @@ class Restaurant extends React.Component {
   // handle delete function
   handleDelete = (id) => {
     // //debugger;;
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete the block?"]
+    );
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
         {
@@ -334,7 +321,9 @@ class Restaurant extends React.Component {
                   </Button>
                 </Row>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -342,17 +331,18 @@ class Restaurant extends React.Component {
         {/* // ADD Restaurant  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Restaurant</Modal.Title>
+            <Modal.Title>{Translation["Add Restaurant"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Name<span style={{ color: "red" }}>*</span>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Restaurant Name"
+                placeholder={Translation["Enter Restaurant Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
@@ -360,45 +350,49 @@ class Restaurant extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Email<span style={{ color: "red" }}>*</span>
+                {Translation["Email"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter Email"
+                placeholder={Translation["Enter Email"]}
                 value={this.state.email}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Contact Number<span style={{ color: "red" }}>*</span>
+                {Translation["Contact Number"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="number"
                 name="phone"
-                placeholder="Enter contact number"
+                placeholder={Translation["Enter contact number"]}
                 value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Password<span style={{ color: "red" }}>*</span>
+                {Translation["Password"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder={Translation["Enter password"]}
                 value={this.state.password}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
-            <Form.Label>Address</Form.Label>
+            <Form.Label>{Translation["Address"]}</Form.Label>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Street<span style={{ color: "red" }}>*</span>
+                {Translation["Street"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -410,7 +404,8 @@ class Restaurant extends React.Component {
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                City<span style={{ color: "red" }}>*</span>
+                {Translation["City"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -422,7 +417,8 @@ class Restaurant extends React.Component {
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                ZipCode<span style={{ color: "red" }}>*</span>
+                {Translation["ZipCode"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -434,7 +430,8 @@ class Restaurant extends React.Component {
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Pickup Place<span style={{ color: "red" }}>*</span>
+                {Translation["Pickup Place"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -446,7 +443,8 @@ class Restaurant extends React.Component {
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Image<span style={{ color: "red" }}>*</span>
+                {Translation["Image"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="file"
@@ -457,14 +455,14 @@ class Restaurant extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleAdd}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -475,56 +473,56 @@ class Restaurant extends React.Component {
           onHide={this.handleUpdateClose}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Restaurant Info</Modal.Title>
+            <Modal.Title>{Translation["Edit Restaurant Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>{Translation["Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Restaurant Name"
+                placeholder={Translation["Enter Restaurant Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>{Translation["Email"]}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder={Translation["Enter email"]}
                 value={this.state.email}
                 disabled={true}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Contact Number</Form.Label>
+              <Form.Label>{Translation["Contact Number"]}</Form.Label>
               <Form.Control
                 type="number"
                 name="phone"
-                placeholder="Enter contact number"
+                placeholder={Translation["Enter contact number"]}
                 value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail" style={{ display: "none" }}>
-              <Form.Label>Password</Form.Label>
+              <Form.Label>{Translation["Password"]}</Form.Label>
               <Form.Control
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder={Translation["Enter password"]}
                 value={this.state.password}
                 disabled={true}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
-            <Form.Label>Address</Form.Label>
+            <Form.Label>{Translation["Address"]}</Form.Label>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Street</Form.Label>
+              <Form.Label>{Translation["Street"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="street"
@@ -534,7 +532,7 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>City</Form.Label>
+              <Form.Label>{Translation["City"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="city"
@@ -544,7 +542,7 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>ZipCode</Form.Label>
+              <Form.Label>{Translation["ZipCode"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="zip"
@@ -554,7 +552,7 @@ class Restaurant extends React.Component {
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Pickup Place</Form.Label>
+              <Form.Label>{Translation["Pickup Place"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="pickupPlace"
@@ -565,7 +563,8 @@ class Restaurant extends React.Component {
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                isPremium<span style={{ color: "red" }}>*</span>
+                {Translation["isPremium"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -573,12 +572,12 @@ class Restaurant extends React.Component {
                 name="isPremium"
                 onChange={this.handleChange}
               >
-                <option value={true}>yes</option>
-                <option value={false}>false</option>
+                <option value={true}>Yes</option>
+                <option value={false}>No</option>
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Image</Form.Label>
+              <Form.Label>{Translation["Image"]}</Form.Label>
               <Form.Control
                 type="file"
                 name="image"
@@ -588,7 +587,7 @@ class Restaurant extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             {this.state.setBtnDisable}
             <Button
@@ -596,7 +595,7 @@ class Restaurant extends React.Component {
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>

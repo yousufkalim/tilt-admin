@@ -4,7 +4,7 @@ import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-
+import Translation from "../../Utilities/translation";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
@@ -34,15 +34,15 @@ import moment from "moment";
 const animatedComponents = makeAnimated();
 
 const columns = [
-  { title: "Name" },
-  { title: "Restaurants" },
-  { title: "Companies" },
-  { title: "Order<br/>Time" },
-  { title: "PickUp<br/>Time" },
-  { title: "Delivery<br/>Time" },
-  { title: "Delivery<br/>Cost" },
-  { title: "Delivery<br/>Person" },
-  { title: "Actions" },
+  { title: Translation["Name"] },
+  { title: Translation["Restaurants"] },
+  { title: Translation["Companies"] },
+  { title: Translation["Order Time"] },
+  { title: Translation["PickUp Time"] },
+  { title: Translation["Delivery Time"] },
+  { title: Translation["Delivery Cost"] },
+  { title: Translation["Delivery Person"] },
+  { title: Translation["Actions"] },
 ];
 
 class Packages extends React.Component {
@@ -220,33 +220,33 @@ class Packages extends React.Component {
       let tempTimeDelivery = date2;
 
       if (moment(tempTimeDelivery).isBefore(tempTimeOrder)) {
-        alert("Delivey Time Needs To Set After Order Time");
+        alert(Translation["Delivey Time Needs To Set After Order Time"]);
         this.setState({ setBtnDisable: false });
         return;
       }
       if (moment(tempTimePick).isBefore(tempTimeOrder)) {
-        alert("Pickup Time Needs To Set After Order Time");
+        alert(Translation["Pickup Time Needs To Set After Order Time"]);
         this.setState({ setBtnDisable: false });
         return;
       }
 
       if (moment(tempTimePick).isAfter(tempTimeDelivery)) {
-        alert("Pickup Time Needs To Be Before Delivery Time");
+        alert(Translation["Pickup Time Needs To Be Before Delivery Time"]);
         this.setState({ setBtnDisable: false });
         return;
       }
       if (deliveryTime === pickUpTime) {
-        alert("Delivery And Pickup Times Cannot Be Same");
+        alert(Translation["Delivery And Pickup Times Cannot Be Same"]);
         this.setState({ setBtnDisable: false });
         return;
       }
       if (timeForOrder === deliveryTime) {
-        alert("Delivery And Order Times Cannot Be Same");
+        alert(Translation["Delivery And Order Times Cannot Be Same"]);
         this.setState({ setBtnDisable: false });
         return;
       }
       if (timeForOrder === pickUpTime) {
-        alert("Pickup And Order Times Cannot Be Same");
+        alert(Translation["Pickup And Order Times Cannot Be Same"]);
         this.setState({ setBtnDisable: false });
         return;
       }
@@ -307,13 +307,13 @@ class Packages extends React.Component {
             item.name,
             item.restaurants.filter((res) => res.status !== "deleted")
               .length === 0
-              ? "No restaurant available"
+              ? Translation["No restaurant available"]
               : item.restaurants
                   .filter((res) => res.status !== "deleted")
                   .map((rest) => " " + rest.firstName),
             item.companies.length !== 0
               ? finalString
-              : "No companies available",
+              : Translation["No companies available"],
             item.timeForOrder,
             item.pickUpTime,
             item.deliveryTime,
@@ -322,7 +322,7 @@ class Packages extends React.Component {
             item.deliveryPerson !== null &&
             item.deliveryPerson.status !== "deleted"
               ? item.deliveryPerson.firstName
-              : "Not Assigned",
+              : Translation["Not Assigned"],
             item._id,
           ]);
         });
@@ -332,7 +332,9 @@ class Packages extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete this block?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -510,28 +512,28 @@ class Packages extends React.Component {
     let tempTimeDelivery = date2;
 
     if (moment(tempTimeDelivery).isBefore(tempTimeOrder)) {
-      alert("Delivey Time Needs To Set After Order Time");
+      alert(Translation["Delivey Time Needs To Set After Order Time"]);
       return;
     }
     if (moment(tempTimePick).isBefore(tempTimeOrder)) {
-      alert("Pickup Time Needs To Set After Order Time");
+      alert(Translation["Pickup Time Needs To Set After Order Time"]);
       return;
     }
 
     if (moment(tempTimePick).isAfter(tempTimeDelivery)) {
-      alert("Pickup Time Needs To Be Before Delivery Time");
+      alert(Translation["Pickup Time Needs To Be Before Delivery Time"]);
       return;
     }
     if (deliveryTime === pickUpTime) {
-      alert("Delivery And Pickup Times Cannot Be Same");
+      alert(Translation["Delivery And Pickup Times Cannot Be Same"]);
       return;
     }
     if (timeForOrder === deliveryTime) {
-      alert("Delivery And Order Times Cannot Be Same");
+      alert(Translation["Delivery And Order Times Cannot Be Same"]);
       return;
     }
     if (timeForOrder === pickUpTime) {
-      alert("Pickup And Order Times Cannot Be Same");
+      alert(Translation["Pickup And Order Times Cannot Be Same"]);
       return;
     }
 
@@ -633,11 +635,13 @@ class Packages extends React.Component {
                       this.setState({ showAdd: true });
                     }}
                   >
-                    Add
+                    {Translation["Add"]}
                   </Button>
                 </Row>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -645,17 +649,18 @@ class Packages extends React.Component {
         {/* // ADD Block  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add New Block</Modal.Title>
+            <Modal.Title>{Translation["Add New Block"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Name<span style={{ color: "red" }}>*</span>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Block Name"
+                placeholder={Translation["Enter Block Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
@@ -663,7 +668,8 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Order Time<span style={{ color: "red" }}>*</span>
+                {Translation["Order Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
             <Datetime
@@ -686,7 +692,8 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                PickUp Time<span style={{ color: "red" }}>*</span>
+                {Translation["PickUp Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
             <Datetime
@@ -709,7 +716,8 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Time<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
 
@@ -733,12 +741,13 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Cost<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Cost"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="number"
                 name="deliveryCost"
-                placeholder="Enter Delivery Cost"
+                placeholder={Translation["Enter Delivery Cost"]}
                 value={this.state.deliveryCost}
                 onChange={this.handleChange}
               />
@@ -747,7 +756,8 @@ class Packages extends React.Component {
             <Form.Group controlId="exampleForm.ControlSelect1">
               {/* Company */}
               <Form.Label>
-                Company List<span style={{ color: "red" }}>*</span>
+                {Translation["Company List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Select
                 closeMenuOnSelect={false}
@@ -762,7 +772,8 @@ class Packages extends React.Component {
             {/* Restaurant */}
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                Restaurant List<span style={{ color: "red" }}>*</span>
+                {Translation["Restaurant List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Select
                 closeMenuOnSelect={false}
@@ -776,7 +787,8 @@ class Packages extends React.Component {
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                Delivary Persons List<span style={{ color: "red" }}>*</span>
+                {Translation["Delivary Persons List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -784,7 +796,7 @@ class Packages extends React.Component {
                 value={this.state.selectedDelivaryPerson}
                 onChange={this.handleChange}
               >
-                <option value="">Select Option</option>
+                <option value="">{Translation["Select Option"]}</option>
                 {this.state.deliveryPersonList.map((deliveryPerson) => (
                   <option value={deliveryPerson.id} key={deliveryPerson.id}>
                     {deliveryPerson.name}
@@ -795,14 +807,14 @@ class Packages extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Cancel
+              {Translation["Cancel"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleAdd}
             >
-              Add
+              {Translation["Add"]}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -810,24 +822,26 @@ class Packages extends React.Component {
         {/* UPDATE User */}
         <Modal show={this.state.updateBlock} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Block Info</Modal.Title>
+            <Modal.Title>{Translation["Edit Block Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Name<span style={{ color: "red" }}>*</span>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Block Name"
+                placeholder={Translation["Enter Block Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Order Time<span style={{ color: "red" }}>*</span>
+                {Translation["Order Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
             <Datetime
@@ -850,7 +864,8 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                PickUp Time<span style={{ color: "red" }}>*</span>
+                {Translation["PickUp Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
             <Datetime
@@ -873,7 +888,8 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Time<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Time"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
             </Form.Group>
 
@@ -897,12 +913,13 @@ class Packages extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Cost<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Cost"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="number"
                 name="deliveryCost"
-                placeholder="Enter Delivery Cost"
+                placeholder={Translation["Enter Delivery Cost"]}
                 value={this.state.deliveryCost}
                 onChange={this.handleChange}
               />
@@ -911,7 +928,8 @@ class Packages extends React.Component {
             <Form.Group controlId="exampleForm.ControlSelect1">
               {/* Company */}
               <Form.Label>
-                Company List<span style={{ color: "red" }}>*</span>
+                {Translation["Company List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Select
                 closeMenuOnSelect={false}
@@ -926,7 +944,8 @@ class Packages extends React.Component {
             {/* Restaurant */}
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                Restaurant List<span style={{ color: "red" }}>*</span>
+                {Translation["Restaurant List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Select
                 closeMenuOnSelect={false}
@@ -940,7 +959,8 @@ class Packages extends React.Component {
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                Delivary Persons List<span style={{ color: "red" }}>*</span>
+                {Translation["Delivary Persons List"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
 
               <Form.Control
@@ -960,14 +980,14 @@ class Packages extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Update
+              {Translation["Update"]}
             </Button>
           </Modal.Footer>
         </Modal>

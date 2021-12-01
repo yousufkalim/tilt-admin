@@ -1,6 +1,7 @@
 import React from "react";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import Utilities from "../../Utilities/Utilities";
+import Translation from "../../Utilities/translation";
 import jwtDecode from "jwt-decode";
 import { Base64 } from "js-base64";
 // reactstrap components
@@ -39,10 +40,10 @@ class Login extends React.Component {
       if (Utilities.isValidString(state.password)) {
         this.setState({ passwordError: "", isLoading: true });
       } else {
-        this.setState({ passwordError: "Password is Invaild" });
+        this.setState({ passwordError: Translation["Password is Invaild"] });
       }
     } else {
-      this.setState({ emailError: "Email is Invaild" });
+      this.setState({ emailError: Translation["Email is Invaild"] });
     }
   }
 
@@ -65,10 +66,10 @@ class Login extends React.Component {
           if (response.user.role === "admin") {
             this.props.history.push("/admin/index");
           } else {
-            window.alert("Something went wrong");
+            window.alert(Translation["Something went wrong"]);
           }
         } else {
-          window.alert("Something went wrong");
+          window.alert(Translation["Something went wrong"]);
         }
       }
     );
@@ -137,7 +138,7 @@ class Login extends React.Component {
             {/* </CardHeader> */}
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>SIGN IN</small>
+                <small>{Translation["SIGN IN"]}</small>
               </div>
               <Form role="form">
                 <FormGroup className="mb-3">
@@ -148,7 +149,7 @@ class Login extends React.Component {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="Email"
+                      placeholder={Translation["Email"]}
                       name="email"
                       onChange={this.handleChange}
                       type="email"
@@ -164,7 +165,7 @@ class Login extends React.Component {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="Password"
+                      placeholder={Translation["Password"]}
                       type="password"
                       name="password"
                       onChange={this.handleChange}
@@ -182,7 +183,9 @@ class Login extends React.Component {
                     className="custom-control-label"
                     htmlFor=" customCheckLogin"
                   >
-                    <span className="text-muted">Remember me</span>
+                    <span className="text-muted">
+                      {Translation["Remember me"]}
+                    </span>
                   </label>
                 </div>
                 <div className="text-center">
@@ -192,7 +195,7 @@ class Login extends React.Component {
                     type="button"
                     onClick={this.LogIn}
                   >
-                    Sign in
+                    {Translation["Sign in"]}
                   </Button>
                 </div>
               </Form>
@@ -205,7 +208,7 @@ class Login extends React.Component {
                 href="#pablo"
                 onClick={(e) => e.preventDefault()}
               >
-                <small>Forgot password?</small>
+                <small>{Translation["Forgot password?"]}</small>
               </a>
             </Col>
             {/* <Col className="text-right" xs="6">
