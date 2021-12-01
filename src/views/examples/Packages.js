@@ -2,37 +2,20 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Table,
-  Container,
-  Row,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row } from "reactstrap";
 // core components
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "Name" },
-  { title: "Package Price" },
-  { title: "Credits" },
-  { title: "Discount on delivery fees" },
-  { title: "Expiration (Days)" },
-  { title: "Actions" },
+  { title: Translation["Name"] },
+  { title: Translation["Package Price"] },
+  { title: Translation["Credits"] },
+  { title: Translation["Discount on delivery fees"] },
+  { title: Translation["Expiration (Days)"] },
+  { title: Translation["Actions"] },
 ];
 
 class Packages extends React.Component {
@@ -129,7 +112,9 @@ class Packages extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete this package?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -277,11 +262,13 @@ class Packages extends React.Component {
                       this.setState({ showAdd: true });
                     }}
                   >
-                    Add
+                    {Translation["Add"]}
                   </Button>
                 </Row>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -289,59 +276,74 @@ class Packages extends React.Component {
         {/* // ADD User  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Package</Modal.Title>
+            <Modal.Title>{Translation["Add Package"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Package Name"
+                placeholder={Translation['"Enter Package Name"']}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Price<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Price"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="Number"
                 name="price"
-                placeholder="Enter Price"
+                placeholder={Translation['"Enter Price"']}
                 value={this.state.price}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Off Price<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Off Price"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="offPrice"
-                placeholder="Enter Off Price"
+                placeholder={Translation['"Enter Off Price"']}
                 value={this.state.offPrice}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Credits<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Credits"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="credits"
-                placeholder="Enter Credits"
+                placeholder={Translation['"Enter Credits"']}
                 value={this.state.credits}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Expiration<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Expiration"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="expiration"
-                placeholder="Enter Expiration"
+                placeholder={Translation['"Enter Expiration"']}
                 value={this.state.expiration}
                 onChange={this.handleChange}
               />
@@ -349,14 +351,14 @@ class Packages extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Cancel
+              {Translation["Cancel"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleAdd}
             >
-              Add
+              {Translation["Add"]}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -364,59 +366,74 @@ class Packages extends React.Component {
         {/* UPDATE User */}
         <Modal show={this.state.updatePackage} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Package Info</Modal.Title>
+            <Modal.Title>{Translation["Edit Package Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Name<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Package Name"
+                placeholder={Translation['"Enter Package Name"']}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Price<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Price"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="Number"
                 name="price"
-                placeholder="Enter Price"
+                placeholder={Translation['"Enter Price"']}
                 value={this.state.price}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Off Price<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Off Price"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="offPrice"
-                placeholder="Enter Off Price"
+                placeholder={Translation['"Enter Off Price"']}
                 value={this.state.offPrice}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Credits<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Credits"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="credits"
-                placeholder="Enter Credits"
+                placeholder={Translation['"Enter Credits"']}
                 value={this.state.credits}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Expiration<span style={{color:'red'}}>*</span></Form.Label>
+              <Form.Label>
+                {Translation["Expiration"]}
+                <span style={{ color: "red" }}>*</span>
+              </Form.Label>
               <Form.Control
                 type="number"
                 name="expiration"
-                placeholder="Enter Expiration"
+                placeholder={Translation['"Enter Expiration"']}
                 value={this.state.expiration}
                 onChange={this.handleChange}
               />
@@ -424,14 +441,14 @@ class Packages extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Update
+              {Translation["Update"]}
             </Button>
           </Modal.Footer>
         </Modal>

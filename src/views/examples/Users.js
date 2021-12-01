@@ -2,6 +2,7 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
 import {
@@ -27,11 +28,11 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "First Name" },
-  { title: "Last Name" },
-  { title: "Company" },
-  { title: "Phone Number" },
-  { title: "Actions" },
+  { title: Translation["First Name"] },
+  { title: Translation["Last Name"] },
+  { title: Translation["Company"] },
+  { title: Translation["Phone Number"] },
+  { title: Translation["Actions"] },
 ];
 
 class Users extends React.Component {
@@ -79,7 +80,7 @@ class Users extends React.Component {
               item.lastName,
               item.user.company !== undefined && item.user.company !== null
                 ? item.user.company.name
-                : "No company",
+                : Translation["No company"],
               item.phone ? item.phone : "N/A",
               item._id,
             ]);
@@ -93,7 +94,9 @@ class Users extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete the user?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -217,7 +220,9 @@ class Users extends React.Component {
             ) : (
               <>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -241,37 +246,37 @@ class Users extends React.Component {
         {/* UPDATE User */}
         <Modal show={this.state.updateUser} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit User Info</Modal.Title>
+            <Modal.Title>{Translation["Edit User Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>{Translation["First Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="firstName"
-                placeholder="Enter First Name"
+                placeholder={Translation["Enter First Name"]}
                 value={this.state.firstName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>{Translation["Last Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="lastName"
-                placeholder="Enter Last Name"
+                placeholder={Translation["Enter Last Name"]}
                 value={this.state.lastName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>{Translation["Email"]}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder={Translation["Enter email"]}
                 value={this.state.email}
                 disabled
                 onChange={this.handleChange}
@@ -280,14 +285,14 @@ class Users extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>

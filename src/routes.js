@@ -13,67 +13,61 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
+import Translation from "Utilities/translation";
 
 var routes = [
   {
-    path: "/index",
-    name: "Dashboard",
-    icon: "ni ni-tv-2 text-primary",
-    component: Index,
-    layout: "/admin",
-  },
-  {
     path: "/user-profile",
-    name: "Users",
+    name: Translation["Users"],
     icon: "ni ni-single-02 text-yellow",
     component: Users,
     layout: "/admin",
   },
   {
     path: "/orders",
-    name: "Orders",
+    name: Translation["Orders"],
     icon: "ni ni-collection text-purple",
     component: Orders,
     layout: "/admin",
   },
   {
     path: "/restaurants",
-    name: "Restaurants",
+    name: Translation["Restaurants"],
     icon: "ni ni-shop text-green",
     component: Restaurant,
     layout: "/admin",
   },
   {
     path: "/company",
-    name: "Companies",
+    name: Translation["Companies"],
     icon: "ni ni-briefcase-24 text-blue",
     component: Companies,
     layout: "/admin",
   },
   {
     path: "/package",
-    name: "Packages",
+    name: Translation["Packages"],
     icon: "ni ni-bag-17 text-pink",
     component: Packages,
     layout: "/admin",
   },
   {
     path: "/blocks",
-    name: "Blocks",
+    name: Translation["Blocks"],
     icon: " ni ni-app text-red",
     component: Blocks,
     layout: "/admin",
   },
   {
     path: "/delivery-person",
-    name: "Delivery Person",
+    name: Translation["Delivery Person"],
     icon: "ni ni-delivery-fast text-red",
     component: DeliveryPerson,
     layout: "/admin",
   },
   {
     path: "/discounts",
-    name: "Discounts",
+    name: Translation["Discounts"],
     icon: "fas fa-hand-holding-usd text-black",
     component: Discounts,
     layout: "/admin",
@@ -96,7 +90,7 @@ var routes = [
   // },
   {
     path: "/login",
-    name: "Login",
+    name: Translation["Login"],
     icon: "ni ni-key-25 text-info",
     component: Login,
     layout: "/auth",

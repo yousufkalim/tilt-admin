@@ -3,6 +3,7 @@ import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
 import moment from "moment";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
 import { Container } from "reactstrap";
@@ -10,13 +11,13 @@ import { Container } from "reactstrap";
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "Date" },
-  { title: "Client Name" },
-  { title: "Company Name" },
-  { title: "Restaurant Name" },
-  { title: "Order Information" },
-  { title: "Order Status" },
-  { title: "Price" },
+  { title: Translation["Date"] },
+  { title: Translation["Client Name"] },
+  { title: Translation["Company Name"] },
+  { title: Translation["Restaurant Name"] },
+  { title: Translation["Order Information"] },
+  { title: Translation["Order Status"] },
+  { title: Translation["Price"] },
 ];
 
 class Company extends React.Component {
@@ -123,7 +124,9 @@ class Company extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete the order?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(

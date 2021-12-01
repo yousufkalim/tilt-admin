@@ -4,40 +4,23 @@ import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
 
 // reactstrap components
-import {
-  Badge,
-  Card,
-  CardHeader,
-  CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Table,
-  Container,
-  Row,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Container, Row } from "reactstrap";
 // core components
 import CustomHeader from "components/Headers/CustomHeader.js";
+import Translation from "../../Utilities/translation";
 
 const columns = [
-  { title: "Name" },
-  { title: "Delivery Place" },
-  { title: "Phone Number" },
-  { title: "Address" },
-  { title: "Block" },
-  { title: "Actions" },
+  { title: Translation["Name"] },
+  { title: Translation["Delivery Place"] },
+  { title: Translation["Phone Number"] },
+  { title: Translation["Address"] },
+  { title: Translation["Block"] },
+  { title: Translation["Actions"] },
 ];
 
 const cities = [
   {
-    name: "Select City",
+    name: Translation["Select City"],
     value: "",
   },
   {
@@ -118,7 +101,6 @@ class Company extends React.Component {
           token: localStorage.getItem("token"),
         },
         (statusCode, responseUpdate) => {
-          // //debugger;;
           if (responseUpdate.message) {
             this.setState({ setBtnDisable: false }, () => {
               window.alert(responseUpdate.message);
@@ -152,7 +134,7 @@ class Company extends React.Component {
               item.street,
               item.block !== null && item.block !== undefined
                 ? item.block.name
-                : "No Block Assigned",
+                : Translation["No Block Assigned"],
               item._id,
             ]);
           }
@@ -163,7 +145,9 @@ class Company extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete this company?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -314,11 +298,13 @@ class Company extends React.Component {
                       this.setState({ showAdd: true });
                     }}
                   >
-                    Add
+                    {Translation["Add"]}
                   </Button>
                 </Row>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -326,17 +312,18 @@ class Company extends React.Component {
         {/* // ADD Company  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Company</Modal.Title>
+            <Modal.Title>{Translation["Add Company"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Name<span style={{ color: "red" }}>*</span>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Company Name"
+                placeholder={Translation["Enter Company Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
@@ -344,12 +331,13 @@ class Company extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Place<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Place"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"
-                placeholder="Enter Delivery Place"
+                placeholder={Translation["Enter Delivery Place"]}
                 value={this.state.deliveryPlace}
                 onChange={this.handleChange}
               />
@@ -357,21 +345,23 @@ class Company extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Contact Number<span style={{ color: "red" }}>*</span>
+                {Translation["Contact Number"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="number"
                 name="phone"
-                placeholder="Enter contact number"
+                placeholder={Translation["Enter contact number"]}
                 value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
-            <Form.Label>Address</Form.Label>
+            <Form.Label>{Translation["Address"]}</Form.Label>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Street<span style={{ color: "red" }}>*</span>
+                {Translation["Street"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -384,7 +374,8 @@ class Company extends React.Component {
 
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                City<span style={{ color: "red" }}>*</span>
+                {Translation["City"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -400,14 +391,14 @@ class Company extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleAdd}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -415,17 +406,18 @@ class Company extends React.Component {
         {/* UPDATE Company */}
         <Modal show={this.state.updateCompany} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Company Info</Modal.Title>
+            <Modal.Title>{Translation["Edit Company Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Name<span style={{ color: "red" }}>*</span>
+                {Translation["Name"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="name"
-                placeholder="Enter Name"
+                placeholder={Translation["Enter Name"]}
                 value={this.state.name}
                 onChange={this.handleChange}
               />
@@ -433,12 +425,13 @@ class Company extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Delivery Place<span style={{ color: "red" }}>*</span>
+                {Translation["Delivery Place"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
                 name="deliveryPlace"
-                placeholder="Enter Deliver Place"
+                placeholder={Translation["Enter Deliver Place"]}
                 value={this.state.deliveryPlace}
                 onChange={this.handleChange}
               />
@@ -446,21 +439,23 @@ class Company extends React.Component {
 
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Contact Number<span style={{ color: "red" }}>*</span>
+                {Translation["Contact Number"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="number"
                 name="phone"
-                placeholder="Enter contact number"
+                placeholder={Translation["Enter contact number"]}
                 value={this.state.phone}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
-            <Form.Label>Address</Form.Label>
+            <Form.Label>{Translation["Address"]}</Form.Label>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>
-                Street<span style={{ color: "red" }}>*</span>
+                {Translation["Street"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -473,7 +468,8 @@ class Company extends React.Component {
 
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>
-                City<span style={{ color: "red" }}>*</span>
+                {Translation["City"]}
+                <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -494,14 +490,14 @@ class Company extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>

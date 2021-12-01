@@ -2,6 +2,7 @@ import React from "react";
 import DataTableComponent from "../../components/DataTable/DataTableComponent";
 import WebServicesManager from "../../WebServiceManager/WebServicesManager";
 import { Modal, Button, Form } from "react-bootstrap";
+import Translation from "../../Utilities/translation";
 
 // reactstrap components
 import {
@@ -27,11 +28,11 @@ import {
 import CustomHeader from "components/Headers/CustomHeader.js";
 
 const columns = [
-  { title: "First Name" },
-  { title: "Last Name" },
-  { title: "Email" },
-  { title: "Block" },
-  { title: "Actions" },
+  { title: Translation["First Name"] },
+  { title: Translation["Last Name"] },
+  { title: Translation["Email"] },
+  { title: Translation["Block"] },
+  { title: Translation["Actions"] },
 ];
 
 class DeliveryPerson extends React.Component {
@@ -85,7 +86,7 @@ class DeliveryPerson extends React.Component {
                 ? item.block.map((b) => {
                     return b.name + " ";
                   })
-                : "No Block Assigned",
+                : Translation["No Block Assigned"],
               item._id,
             ]);
           }
@@ -98,7 +99,9 @@ class DeliveryPerson extends React.Component {
   };
   // handle delete function
   handleDelete = (id) => {
-    const confirmis = window.confirm("Are you sure you want to delete?");
+    const confirmis = window.confirm(
+      Translation["Are you sure you want to delete this delivery person?"]
+    );
 
     if (confirmis === true) {
       this.WebServicesManager.DeleteApiInURL(
@@ -263,11 +266,13 @@ class DeliveryPerson extends React.Component {
                       this.setState({ showAdd: true });
                     }}
                   >
-                    Add
+                    {Translation["Add"]}
                   </Button>
                 </Row>
                 <hr />
-                <p style={{ textAlign: "center" }}>No Record Found</p>
+                <p style={{ textAlign: "center" }}>
+                  {Translation["No Record Found"]}
+                </p>
               </>
             )}
           </>
@@ -275,47 +280,47 @@ class DeliveryPerson extends React.Component {
         {/* // ADD User  */}
         <Modal show={this.state.showAdd} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Delivery Person</Modal.Title>
+            <Modal.Title>{Translation["Add Delivery Person"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>{Translation["First Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="firstName"
-                placeholder="Enter First Name"
+                placeholder={Translation["Enter First Name"]}
                 value={this.state.firstName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>{Translation["Last Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="lastName"
-                placeholder="Enter Last Name"
+                placeholder={Translation["Enter Last Name"]}
                 value={this.state.lastName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>{Translation["Email"]}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder={Translation["Enter email"]}
                 value={this.state.email}
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>{Translation["Password"]}</Form.Label>
               <Form.Control
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder={Translation["Enter password"]}
                 value={this.state.password}
                 onChange={this.handleChange}
               />
@@ -323,10 +328,10 @@ class DeliveryPerson extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button variant="primary" onClick={this.handleAdd}>
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -334,37 +339,37 @@ class DeliveryPerson extends React.Component {
         {/* UPDATE User */}
         <Modal show={this.state.updateUser} onHide={this.handleUpdateClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit User Info</Modal.Title>
+            <Modal.Title>{Translation["Edit User Info"]}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>{Translation["First Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="firstName"
-                placeholder="Enter First Name"
+                placeholder={Translation["Enter First Name"]}
                 value={this.state.firstName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>{Translation["Last Name"]}</Form.Label>
               <Form.Control
                 type="text"
                 name="lastName"
-                placeholder="Enter Last Name"
+                placeholder={Translation["Enter Last Name"]}
                 value={this.state.lastName}
                 onChange={this.handleChange}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>{Translation["Email"]}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Enter email"
+                placeholder={Translation["Enter email"]}
                 value={this.state.email}
                 disabled
                 onChange={this.handleChange}
@@ -373,14 +378,14 @@ class DeliveryPerson extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleUpdateClose}>
-              Close
+              {Translation["Close"]}
             </Button>
             <Button
               variant="primary"
               disabled={this.state.setBtnDisable}
               onClick={this.handleUpdateSubmit}
             >
-              Save Changes
+              {Translation["Save Changes"]}
             </Button>
           </Modal.Footer>
         </Modal>
